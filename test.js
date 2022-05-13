@@ -1,5 +1,3 @@
-const { assert } = require("./py");
-
 // Import everything from the module
 Object.entries(require("./py")).forEach(
   ([name, exported]) => (global[name] = exported)
