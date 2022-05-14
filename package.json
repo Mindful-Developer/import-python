@@ -1,6 +1,6 @@
 {
   "name": "javascript",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Python functions in JavaScript",
   "main": "py.js",
   "scripts": {
