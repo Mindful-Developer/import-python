@@ -4,7 +4,6 @@ os = require("os");
 child_process = require("child_process");
 
 function isIterable(obj) {
-  // checks for null and undefined
   if (obj == null) {
     return false;
   }
@@ -101,8 +100,11 @@ class Complex {
 }
 
 class Dict extends Object {
-  constructor(iterable = []) {
+  constructor(iterable) {
     super();
+    if (iterable && isIterable(iterable)) {
+      iterable = [...iterable];
+    }
     if (iterable && iterable.length !== undefined) {
       for (let [key, value] of iterable) {
         this.set(key, value);
@@ -200,18 +202,37 @@ class Dict extends Object {
     return newDict;
   }
 
-  toString() {
-    return `{${Array.from(Object.entries(this))
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(", ")}}`;
+  get length() {
+    return Object.keys(this).length;
   }
+
+  toString() {
+    let output = "";
+    for (let [key, value] of Object.entries(this)) {
+      if (typeof key !== "number" && key !== undefined && key !== null) {
+        key = key.toString();
+      }
+      if (typeof value !== "number" && value !== undefined && value !== null) {
+        value = value.toString();
+      }
+      output += `${key}: ${value}, `;
+    }
+    return `{${output.slice(0, -2)}}`;
+  }
+
+  // toString() {
+  //   return `{${Array.from(Object.entries(this))
+  //     .map(([key, value]) => `${key}: ${value}`)
+  //     .join(", ")}}`;
+  // }
 }
 
 class FrozenSet extends Set {
   constructor(iterable) {
-    super()
+    super();
     if (!iterable) {
     } else if (isIterable(iterable)) {
+      iterable = [...iterable];
       for (let item of iterable) {
         this.add(item);
       }
@@ -229,9 +250,15 @@ class FrozenSet extends Set {
   }
 
   toString() {
-    return `FrozenSet({${JSON.stringify(Array.from(this))
-      .replaceAll(",", ", ")
-      .slice(1, -1)}})`;
+    let output = "";
+    for (let item of this) {
+      if (typeof item === "number") {
+        output += item + ", ";
+      } else {
+        output += item.toString() + ", ";
+      }
+    }
+    return `FrozenSet({${output.slice(0, -2)}})`;
   }
 }
 
@@ -239,6 +266,7 @@ class Tuple extends Array {
   constructor(iterable) {
     if (isIterable(iterable)) {
       super();
+      iterable = [...iterable];
       for (let item of iterable) {
         this.push(item);
       }
@@ -253,15 +281,18 @@ class Tuple extends Array {
   }
 
   toString() {
-    if (this.length === 1) {
-      return `(${JSON.stringify(this[0])
-        .replaceAll('"', "'")},)`;
-    } else {
-      return `(${JSON.stringify(this)
-        .slice(1, -1)
-        .replaceAll(",", ", ")
-        .replaceAll('"', "'")})`;
+    let output = "";
+    for (let item of this) {
+      if (typeof item === "number") {
+        output += item + ", ";
+      } else {
+        output += item.toString() + ", ";
+      }
     }
+    if (this.length === 1) {
+      return `(${output.slice(0, -1)})`;
+    }
+    return `(${output.slice(0, -2)})`;
   }
 
   count(num) {
@@ -289,9 +320,12 @@ class List extends Array {
       super();
     } else if (isIterable(iterable)) {
       super();
+      iterable = [...iterable];
       for (let item of iterable) {
         this.push(item);
       }
+    } else if (typeof iterable === "number") {
+      super(iterable);
     } else {
       throw new Error("Invalid iterable");
     }
@@ -328,7 +362,7 @@ class List extends Array {
         return i;
       }
     }
-    throw new ValueError(`${x} not in list`);
+    throw new Error(`ValueError: ${x} not in list`);
   }
   insert(index, x) {
     this.splice(index, 0, x);
@@ -354,10 +388,15 @@ class List extends Array {
     }
   }
   toString() {
-    return `${JSON.stringify(this)
-      .replaceAll(",", ", ")
-      .replaceAll('"', "'")
-    }`;
+    let output = "";
+    for (let item of this) {
+      if (typeof item === "number") {
+        output += item + ", ";
+      } else {
+        output += item.toString() + ", ";
+      }
+    }
+    return `[${output.slice(0, -2)}]`;
   }
 }
 
@@ -397,12 +436,12 @@ class Random {
   randint = (start, end) =>
     Math.floor(this.random() * (end - start + 1)) + start;
 
-  choice = (array) => array[this.randint(0, len(array) - 1)];
+  choice = (iterable) => iterable[this.randint(0, len(iterable) - 1)];
 
-  choices = (array, k) => {
-    let result = [];
+  choices = (iterable, k) => {
+    let result = list();
     for (let i = 0; i < k; i++) {
-      result.push(this.choice(array));
+      result.append(this.choice(iterable));
     }
     return result;
   };
@@ -428,7 +467,7 @@ class Random {
   };
 
   uniform(start, end) {
-    this.random() * (end - start) + start;
+    return this.random() * (end - start) + start;
   }
 
   randrange(stop, start = null, step = 1) {
@@ -451,37 +490,147 @@ class Random {
   }
 }
 
+class FileObject {
+  constructor(path, mode = "r") {
+    this.path = path;
+    this.mode = mode;
+    if (!["r", "r+", "w", "w+", "a", "a+"].includes(mode)) {
+      throw new Error(`Invalid mode: ${mode}`);
+    }
+    if (this.mode !== "r") {
+      fs.writeFileSync(this.path, "");
+    }
+    this.open = true;
+  }
+
+  close() {
+    this.open = false;
+    Object.freeze(this);
+  }
+
+  read() {
+    if (!this.open) {
+      throw new Error("File is closed");
+    }
+    if (["r", "r+", "a+", "w+"].includes(this.mode)) {
+      return fs.readFileSync(this.path, "utf8");
+    } else {
+      throw new Error("File not open for reading");
+    }
+  }
+
+  readline(i = 0) {
+    if (!this.open) {
+      throw new Error("File is closed");
+    }
+    if (["r", "r+", "a+", "w+"].includes(this.mode)) {
+      let lines = this.read().split("\n");
+      return lines[i] + "\n";
+    } else {
+      throw new Error("File not open for reading");
+    }
+  }
+
+  readlines(start = 0, stop = null) {
+    if (!this.open) {
+      throw new Error("File is closed");
+    }
+    if (["r", "r+", "a+", "w+"].includes(this.mode)) {
+      let lines = this.read().split("\n");
+      if (stop === null) {
+        stop = len(lines);
+      }
+      return list(map((line) => line + "\n", lines.slice(start, stop)));
+    } else {
+      throw new Error("File not open for reading");
+    }
+  }
+
+  splitlines() {
+    if (!this.open) {
+      throw new Error("File is closed");
+    }
+    if (["r", "r+", "a+", "w+"].includes(this.mode)) {
+      return list(this.read().split("\n"));
+    } else {
+      throw new Error("File not open for reading");
+    }
+  }
+
+  truncate(size = null) {
+    if (!this.open) {
+      throw new Error("File is closed");
+    }
+    if (["w", "w+", "r+"].includes(this.mode)) {
+      if (size === null) {
+        size = 0;
+      }
+      fs.truncateSync(this.path, size);
+    } else {
+      throw new Error(
+        "File not open for trucating. Use mode 'w' or 'w+' or 'r+'"
+      );
+    }
+  }
+
+  write(data) {
+    if (!this.open) {
+      throw new Error("File is closed");
+    }
+    if (["w", "w+", "a", "a+"].includes(this.mode)) {
+      fs.appendFileSync(this.path, data);
+    } else {
+      throw new Error("File not open for writing");
+    }
+  }
+
+  writelines(iterable) {
+    if (!this.open) {
+      throw new Error("File is closed");
+    }
+    if (["w", "w+", "a", "a+"].includes(this.mode)) {
+      for (let line of iterable) {
+        fs.appendFileSync(this.path, line);
+      }
+    } else {
+      throw new Error("File not open for writing");
+    }
+  }
+}
+
 function abs(num) {
   return Math.abs(num);
 }
 
-function aiter(iterable) {
-  return {
-    [Symbol.asyncIterator]() {
-      return {
-        next: async () => {
-          let result = iterable.next();
-          if (result.done) {
-            return { done: true, value: null };
-          }
-          return { done: false, value: result.value };
-        },
-      };
-    },
-  };
-}
+// function aiter(iterable) {
+//   return {
+//     [Symbol.asyncIterator]() {
+//       return {
+//         next: async () => {
+//           let result = iterable.next();
+//           if (result.done) {
+//             return { done: true, value: null };
+//           }
+//           return { done: false, value: result.value };
+//         },
+//       };
+//     },
+//   };
+// }
 
 function all(array) {
-  return array.reduce((a, b) => a && b, true);
+  array = [...array];
+  return array.reduce((a, b) => bool(a) && bool(b));
 }
 
 function any(array) {
-  return array.reduce((a, b) => a || b, false);
+  array = [...array];
+  return array.reduce((a, b) => bool(a) || bool(b));
 }
 
-function anext(iterator) {
-  return iterator[Symbol.asyncIterator]().next();
-}
+// function anext(iterator) {
+//   return iterator[Symbol.asyncIterator]().next();
+// }
 
 function assert(condition, message, expected = true) {
   if (condition !== expected) {
@@ -497,15 +646,13 @@ function ascii(obj) {
     return "undefined";
   }
   if (typeof obj === "string") {
-    return `"${obj.replaceAll('"', '\\"')}"`;
+    return `${obj}`;
   }
-  if (typeof obj === "number") {
-    return obj.toString();
-  }
-  if (typeof obj === "boolean") {
-    return obj.toString();
-  }
-  if (typeof obj === "function") {
+  if (
+    typeof obj === "number" ||
+    typeof obj === "boolean" ||
+    typeof obj === "function"
+  ) {
     return obj.toString();
   }
   if (obj instanceof Array) {
@@ -524,8 +671,7 @@ function bin(x) {
 }
 
 function bool(x) {
-  console.log(x.length);
-  if (typeof x === "object") {
+  if (isIterable(x)) {
     return x.length > 0;
   } else {
     return !!x;
@@ -554,7 +700,7 @@ function bytes(data) {
       a2.push(item);
     }
   }
-  return tuple(...a2);
+  return tuple(a2);
 }
 
 function callable(obj) {
@@ -601,10 +747,11 @@ function dict(iterable) {
 }
 
 function divmod(num, den) {
-  return tuple(Math.floor(num / den), num % den);
+  return tuple([Math.floor(num / den), num % den]);
 }
 
 function enumerate(array, start = 0, step = 1) {
+  array = [...array];
   return {
     [Symbol.iterator]() {
       return this;
@@ -616,10 +763,10 @@ function enumerate(array, start = 0, step = 1) {
       if (this.value < start + step * array.length) {
         this.value = this.value + step;
         return {
-          value: tuple(
+          value: tuple([
             this.value - step,
-            array[(this.value - step - start) / step]
-          ),
+            array[(this.value - step - start) / step],
+          ]),
           done: false,
         };
       }
@@ -637,6 +784,7 @@ function exec(code, globals = global, locals = {}) {
 }
 
 function filter(func, iterable) {
+  iterable = [...iterable];
   return iterable.filter(func);
 }
 
@@ -705,34 +853,40 @@ function input(message = "") {
   return child_process.spawnSync(cmd, args, opts).stdout.toString().trim();
 }
 
-function int(x) {
+function int(x, base = 10) {
   if (typeof x === "number") {
+    if (base !== 10) {
+      throw new TypeError("int() can't convert non-string with explicit base");
+    }
     return Math.floor(x);
   } else if (typeof x === "string") {
-    return parseInt(x);
+    return parseInt(x, base);
   } else {
     throw new TypeError("int() argument must be a string or a number");
   }
 }
 
-function isclose(a, b, rel_tol = 1e-15, abs_tol = 0.0) {
-  if (typeof a !== "number" || typeof b !== "number") {
-    throw new TypeError("isclose() requires 2 numbers");
-  }
-  return (
-    Math.abs(a - b) <= rel_tol * Math.max(Math.abs(a), Math.abs(b)) + abs_tol
-  );
-}
+// function isclose(a, b, rel_tol = 1e-15, abs_tol = 0.0) {
+//   if (typeof a !== "number" || typeof b !== "number") {
+//     throw new TypeError("isclose() requires 2 numbers");
+//   }
+//   return (
+//     Math.abs(a - b) <= rel_tol * Math.max(Math.abs(a), Math.abs(b)) + abs_tol
+//   );
+// }
 
-function isinstance(x, type) {
-  return typeof x === type;
+function isinstance(x, Type) {
+  try {
+    return typeof x === typeof Type();
+  } catch (e) {
+    return x instanceof Type;
+  }
 }
 
 function issubclass(x, type) {
   return x.prototype instanceof type;
 }
 
-// TODO unused sentinal for secondary function
 function iter(obj, sentinal) {
   if (sentinal) {
     return obj[Symbol.iterator]();
@@ -748,6 +902,7 @@ function iter(obj, sentinal) {
 }
 
 function len(array) {
+  array = [...array];
   return array.length;
 }
 
@@ -760,14 +915,17 @@ function locals() {
 }
 
 function map(func, iterable) {
+  iterable = [...iterable];
   return iterable.map(func);
 }
 
 function max(array) {
+  array = [...array];
   return Math.max(...array);
 }
 
 function min(array) {
+  array = [...array];
   return Math.min(...array);
 }
 
@@ -784,7 +942,7 @@ function oct(x) {
 }
 
 function open(file, mode = "r") {
-  return fs.open(file, mode);
+  return new FileObject(file, mode);
 }
 
 function ord(x) {
@@ -855,13 +1013,13 @@ function range(stop, start = null, step = 1) {
 
 function repr(obj) {
   if (obj === null) {
-    return "None";
+    return "null";
   } else if (obj === undefined) {
     return "undefined";
   } else if (typeof obj === "function") {
     return obj.toString();
   } else if (typeof obj === "object") {
-    return `${obj.constructor.name}`;
+    return `'${obj}'`;
   } else if (typeof obj === "string") {
     return `'${obj}'`;
   } else if (typeof obj === "number") {
@@ -872,6 +1030,7 @@ function repr(obj) {
 }
 
 function reversed(iterable) {
+  iterable = [...iterable];
   let result = [];
   for (let item of iterable) {
     result.unshift(item);
@@ -884,6 +1043,7 @@ function round(num, ndigits = 0) {
 }
 
 function set(array) {
+  array = [...array];
   return new Set(array);
 }
 
@@ -892,6 +1052,7 @@ function setattr(obj, name, value) {
 }
 
 function slice(array, start, stop, step = 1) {
+  array = [...array];
   let result = [];
   for (let i = start; i < stop; i += step) {
     result.push(array[i]);
@@ -899,24 +1060,17 @@ function slice(array, start, stop, step = 1) {
   return result;
 }
 
-function sorted(iterable, key = null, reverse = false) {
+function sorted(iterable, key = undefined, reverse = false) {
+  iterable = [...iterable];
   let result = [];
   for (let item of iterable) {
     result.push(item);
   }
-  if (key === null) {
-    result.sort();
-  } else {
-    result.sort((a, b) => {
-      if (key(a) < key(b)) {
-        return -1;
-      } else if (key(a) > key(b)) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+  if (typeof key === "boolean") {
+    reverse = key;
+    key = undefined;
   }
+  result.sort(key);
   if (reverse) {
     result.reverse();
   }
@@ -934,6 +1088,7 @@ function str(x) {
 }
 
 function sum(array) {
+  array = [...array];
   return array.reduce((a, b) => a + b, 0);
 }
 
@@ -948,6 +1103,10 @@ function type(obj) {
 // vars = (...args) => {
 
 function zip(...arrays) {
+  for (let i = 0; i < len(arrays); i++) {
+    arrays[i] = [...arrays[i]];
+  }
+
   return {
     [Symbol.iterator]() {
       return this;
@@ -977,7 +1136,7 @@ function zip(...arrays) {
 }
 
 function __import__(name) {
-  let result = require(name);
+  const result = require(name);
   return result;
 }
 
@@ -996,11 +1155,10 @@ module.exports = {
   List,
   Dict,
   FrozenSet,
+  FileObject,
   abs,
-  aiter,
   all,
   any,
-  anext,
   assert,
   ascii,
   bin,
@@ -1027,7 +1185,6 @@ module.exports = {
   hex,
   input,
   int,
-  isclose,
   isinstance,
   issubclass,
   iter,
@@ -1044,6 +1201,7 @@ module.exports = {
   pow,
   print,
   range,
+  repr,
   reversed,
   round,
   set,
