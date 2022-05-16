@@ -1,5 +1,5 @@
 // Import everything from the module
-Object.entries(require("../py-js")).forEach(
+Object.entries(require("../import-python")).forEach(
   ([name, exported]) => (global[name] = exported)
 );
 
