@@ -1,8 +1,8 @@
 {
-  "name": "py-js",
+  "name": "import-python",
   "version": "1.0.0",
   "description": "Python functions in JavaScript",
-  "main": "py-js.js",
+  "main": "import-python.js",
   "scripts": {
     "test": "node ./tests/test.js"
   },

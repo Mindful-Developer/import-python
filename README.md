@@ -1,10 +1,10 @@
-# py.js
+# import-python
 Python's built-in functions and classes ported to JavaScript + the random library. Most are pretty close to the same functionality as the python version of the function or class.
 
 To import all python functions, you can can add this to the top of your code:
 ```js
 // Import everything from the module
-Object.entries(require("py-js")).forEach(([name, exported]) => (global[name] = exported));
+Object.entries(require("import-python")).forEach(([name, exported]) => (global[name] = exported));
 ```
 
 # Python Classes
