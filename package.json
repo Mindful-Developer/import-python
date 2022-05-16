@@ -1,12 +1,12 @@
 {
-  "name": "javascript",
+  "name": "py-js",
   "version": "1.0.0",
   "description": "Python functions in JavaScript",
-  "main": "py.js",
+  "main": "py-js.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./tests/test.js"
   },
   "keywords": [],
   "author": "Christopher James",
-  "license": "ISC"
+  "license": "GNU GPLv3"
 }
