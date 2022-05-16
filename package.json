@@ -1,7 +1,7 @@
 {
   "name": "import-python",
-  "version": "1.0.0",
-  "description": "Python functions in JavaScript",
+  "version": "1.0.1",
+  "description": "Python built-in functions and classes in JavaScript with no dependencies",
   "main": "import-python.js",
   "scripts": {
     "test": "node ./tests/test.js"
