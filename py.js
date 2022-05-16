@@ -1,7 +1,8 @@
-util = require("util");
-fs = require("fs");
-os = require("os");
-child_process = require("child_process");
+const util = require("util");
+const fs = require("fs");
+const os = require("os");
+const child_process = require("child_process");
+
 
 function isIterable(obj) {
   if (obj == null) {
@@ -9,6 +10,7 @@ function isIterable(obj) {
   }
   return typeof obj[Symbol.iterator] === "function";
 }
+
 
 class Complex {
   real;
@@ -98,6 +100,7 @@ class Complex {
     }
   }
 }
+
 
 class Dict extends Object {
   constructor(iterable) {
@@ -219,13 +222,8 @@ class Dict extends Object {
     }
     return `{${output.slice(0, -2)}}`;
   }
-
-  // toString() {
-  //   return `{${Array.from(Object.entries(this))
-  //     .map(([key, value]) => `${key}: ${value}`)
-  //     .join(", ")}}`;
-  // }
 }
+
 
 class FrozenSet extends Set {
   constructor(iterable) {
@@ -261,6 +259,7 @@ class FrozenSet extends Set {
     return `FrozenSet({${output.slice(0, -2)}})`;
   }
 }
+
 
 class Tuple extends Array {
   constructor(iterable) {
@@ -314,6 +313,7 @@ class Tuple extends Array {
   }
 }
 
+
 class List extends Array {
   constructor(iterable) {
     if (!iterable) {
@@ -330,18 +330,23 @@ class List extends Array {
       throw new Error("Invalid iterable");
     }
   }
+
   [util.inspect.custom]() {
     return this.toString();
   }
+
   append(x) {
     this.push(x);
   }
+
   clear() {
     this.length = 0;
   }
+
   copy() {
     return new list(this);
   }
+
   count(x) {
     let count = 0;
     for (let item of this) {
@@ -351,11 +356,13 @@ class List extends Array {
     }
     return count;
   }
+
   extend(iterable) {
     for (let item of iterable) {
       this.push(item);
     }
   }
+
   index(x, start = 0, stop = this.length) {
     for (let i = start; i < stop; i++) {
       if (this[i] === x) {
@@ -364,12 +371,14 @@ class List extends Array {
     }
     throw new Error(`ValueError: ${x} not in list`);
   }
+
   insert(index, x) {
     this.splice(index, 0, x);
   }
   pop(index = this.length - 1) {
     return this.splice(index, 1)[0];
   }
+
   remove(x) {
     let index = this.indexOf(x);
     if (index === -1) {
@@ -377,6 +386,7 @@ class List extends Array {
     }
     this.splice(index, 1);
   }
+
   sort(key = undefined, reverse = false) {
     if (typeof key === "boolean") {
       [key, reverse] = [undefined, key];
@@ -387,6 +397,7 @@ class List extends Array {
       super.sort(key);
     }
   }
+
   toString() {
     let output = "";
     for (let item of this) {
@@ -399,6 +410,7 @@ class List extends Array {
     return `[${output.slice(0, -2)}]`;
   }
 }
+
 
 class Random {
   constructor(seed = null) {
@@ -489,6 +501,7 @@ class Random {
     }
   }
 }
+
 
 class FileObject {
   constructor(path, mode = "r") {
@@ -602,7 +615,7 @@ function abs(num) {
   return Math.abs(num);
 }
 
-// function aiter(iterable) {
+// async function aiter(iterable) {
 //   return {
 //     [Symbol.asyncIterator]() {
 //       return {
@@ -629,7 +642,11 @@ function any(array) {
 }
 
 // function anext(iterator) {
-//   return iterator[Symbol.asyncIterator]().next();
+//   let result = iterator.next();
+//   if (result.done) {
+//     throw new Error("StopIteration");
+//   }
+//   return result.value;
 // }
 
 function assert(condition, message, expected = true) {
@@ -866,15 +883,6 @@ function int(x, base = 10) {
   }
 }
 
-// function isclose(a, b, rel_tol = 1e-15, abs_tol = 0.0) {
-//   if (typeof a !== "number" || typeof b !== "number") {
-//     throw new TypeError("isclose() requires 2 numbers");
-//   }
-//   return (
-//     Math.abs(a - b) <= rel_tol * Math.max(Math.abs(a), Math.abs(b)) + abs_tol
-//   );
-// }
-
 function isinstance(x, Type) {
   try {
     return typeof x === typeof Type();
@@ -1100,8 +1108,6 @@ function type(obj) {
   return typeof obj;
 }
 
-// vars = (...args) => {
-
 function zip(...arrays) {
   for (let i = 0; i < len(arrays); i++) {
     arrays[i] = [...arrays[i]];
@@ -1157,6 +1163,8 @@ module.exports = {
   FrozenSet,
   FileObject,
   abs,
+  // aiter,
+  // anext,
   all,
   any,
   assert,
