@@ -1,7 +1,8 @@
-// Import everything from the module
-Object.entries(require("../import-python")).forEach(
-  ([name, exported]) => (global[name] = exported)
-);
+const fs = require('fs');
+const { ImportStar } = require('../import-python');
+
+ImportStar('core');
+ImportStar('random');
 
 // Complex test
 let my_complex = new Complex(1, 2);
@@ -432,9 +433,7 @@ try {
 } catch (e) {
   assert(e.message === "File is closed", "open().read() failed");
 }
-const fs = __import__("fs");
 fs.unlinkSync("test.txt");
-assert(fs.existsSync("test.txt") === false, "__import__() failed");
 
 // more tests
 assert(ord("a") === 97, "ord() failed");
