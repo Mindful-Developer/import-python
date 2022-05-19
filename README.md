@@ -88,3 +88,24 @@ for (let [i, number] of enumerate(range(10, 20, 2))) {
 # Random:
   - Random,
   - random
+
+# Itertools:
+  - accumulate,
+  - chain,
+  - combinations,
+  - combinations_with_replacement,
+  - compress,
+  - count,
+  - cycle,
+  - dropwhile,
+  - filterfalse,
+  - groupby,
+  - islice,
+  - pairwise,
+  - permutations,
+  - product,
+  - repeat,
+  - starmap,
+  - takewhile,
+  - tee,
+  - zip_longest,

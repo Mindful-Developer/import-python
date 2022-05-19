@@ -206,6 +206,10 @@ class Dict extends Object {
       }
       if (typeof value !== "number" && value !== undefined && value !== null) {
         value = value.toString();
+      } else if (value === null) {
+        value = "null";
+      } else if (value === undefined) {
+        value = "undefined";
       }
       output += `${key}: ${value}, `;
     }
@@ -240,6 +244,10 @@ class FrozenSet extends Set {
     for (let item of this) {
       if (typeof item === "number") {
         output += item + ", ";
+      } else if (item === null) {
+        output += "null, ";
+      } else if (item === undefined) {
+        output += "undefined, ";
       } else {
         output += item.toString() + ", ";
       }
@@ -271,6 +279,10 @@ class Tuple extends Array {
     for (let item of this) {
       if (typeof item === "number") {
         output += item + ", ";
+      } else if (item === null) {
+        output += "null, ";
+      } else if (item === undefined) {
+        output += "undefined, ";
       } else {
         output += item.toString() + ", ";
       }
@@ -330,7 +342,7 @@ class List extends Array {
   }
 
   copy() {
-    return new list(this);
+    return new List(this);
   }
 
   count(x) {
@@ -389,6 +401,10 @@ class List extends Array {
     for (let item of this) {
       if (typeof item === "number") {
         output += item + ", ";
+      } else if (item === null) {
+        output += "null, ";
+      } else if (item === undefined) {
+        output += "undefined, ";
       } else {
         output += item.toString() + ", ";
       }

@@ -270,7 +270,7 @@ function iter(obj, sentinal) {
   } else {
     const iterables = [Array, Set, Map, String];
     for (let iterable of iterables) {
-      if (obj instanceof iterable) {
+      if (isinstance(obj, iterable)) {
         return obj[Symbol.iterator]();
       }
     }
@@ -279,7 +279,9 @@ function iter(obj, sentinal) {
 }
 
 function len(array) {
-  array = [...array];
+  if (isIterable(array)) {
+    array = [...array];
+  }
   return array.length;
 }
 
@@ -291,25 +293,34 @@ function locals() {
   return { ...global };
 }
 
+// multiple iterables
 function map(func, iterable) {
   iterable = [...iterable];
   return iterable.map(func);
 }
 
 function max(array) {
-  array = [...array];
+  if (isIterable(array)) {
+    array = [...array];
+  }
   return Math.max(...array);
 }
 
 function min(array) {
-  array = [...array];
+  if (isIterable(array)) {
+    array = [...array];
+  }
   return Math.min(...array);
 }
 
-function next(iterator) {
+function next(iterator, def=undefined) {
   let result = iterator.next();
   if (result.done) {
-    throw new Error("StopIteration");
+    if (def !== undefined) {
+      return def;
+    } else {
+      throw new Error('StopIteration');
+    }
   }
   return result.value;
 }
@@ -478,10 +489,10 @@ function type(obj) {
 }
 
 function zip(...arrays) {
-  for (let i = 0; i < len(arrays); i++) {
-    arrays[i] = [...arrays[i]];
+  arrayCopy = list([]);
+  for (arr of arrays) {
+    arrayCopy.append(list([...arr]));
   }
-
   return {
     [Symbol.iterator]() {
       return this;
@@ -489,14 +500,14 @@ function zip(...arrays) {
     next() {
       if (!this.value) {
         this.value = [];
-        const arrayLengths = arrays.map((a) => a.length);
+        const arrayLengths = arrayCopy.map((a) => a.length);
         const shortestArray = arrayLengths.reduce((a, b) => (a < b ? a : b));
-        const arraysSum = shortestArray * arrays.length;
+        const arraysSum = shortestArray * arrayCopy.length;
 
         for (let i = 0; i < shortestArray; i++) {
           let temp = [];
-          for (let j = 0; j < arrays.length; j++) {
-            temp.push(arrays[j][i]);
+          for (let j = 0; j < arrayCopy.length; j++) {
+            temp.push(arrayCopy[j][i]);
           }
           this.value.push(tuple(temp));
         }

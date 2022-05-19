@@ -1,8 +1,8 @@
 const fs = require('fs');
-const { ImportStar } = require('../import-python');
+const { py_import_star } = require('../import-python');
 
-ImportStar('core');
-ImportStar('random');
+py_import_star("core");
+py_import_star("random");
 
 // Complex test
 let my_complex = new Complex(1, 2);
