@@ -1,8 +1,10 @@
-const fs = require('fs');
-const { py_import_star } = require('../import-python');
+const fs = require("fs");
+const { py_import_star } = require("../import-python");
+const { listComp } = require("../util/util");
 
 py_import_star("core");
 py_import_star("random");
+py_import_star("itertools");
 
 // Complex test
 let my_complex = new Complex(1, 2);
@@ -511,5 +513,130 @@ try {
 } catch (e) {
   assert(e.message === "Test Exception", "raise() failed");
 }
+
+// Itertools tests
+assert(
+  list(accumulate([1, 2, 3, 4, 5], (a, b) => a + b)).toString() ===
+    "[1, 3, 6, 10, 15]",
+  "accumulate() failed"
+);
+assert(
+  list(chain([1, 2, 3], [4, 5, 6], [7, 8, 9])).toString() ===
+    "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+  "chain() failed"
+);
+assert(
+  list(combinations([1, 2, 3, 4, 5], 3)).toString() ===
+    "[(1, 2, 3), (1, 2, 4), (1, 2, 5), (1, 3, 4), (1, 3, 5), (1, 4, 5), (2, 3, 4), (2, 3, 5), (2, 4, 5), (3, 4, 5)]",
+  "combinations() failed"
+);
+assert(
+  list(combinations_with_replacement("abc", 2)).toString() ===
+    "[(a, a), (a, b), (a, c), (b, a), (b, b), (b, c), (c, a), (c, b), (c, c)]",
+  "combinations_with_replacement() failed"
+);
+assert(
+  list(compress("abcdef", [1, 0, 1, 0, 1, 1])).toString() === "[a, c, e, f]",
+  "compress() failed"
+);
+
+const my_count = count(1, 2);
+for (let i = 1; i < 10; i += 2) {
+  assert(next(my_count) === i, "count() failed");
+}
+
+comps = ["a", "b", "c", "a", "b", "c", "a", "b", "c", "a"];
+const my_cycle = cycle("abc");
+for (let i = 0; i < 10; i++) {
+  assert(next(my_cycle) === comps[i], "cycle() failed");
+}
+
+assert(
+  list(pairwise("ABCDEFG")).toString() ===
+    "[(A, B), (B, C), (C, D), (D, E), (E, F), (F, G)]",
+  "pairwise() failed"
+);
+
+assert(
+  list(dropwhile((x) => x < 5, [1, 4, 6, 4, 1])).toString() === "[6, 4, 1]",
+  "dropwhile() failed"
+);
+assert(
+  list(filterfalse((x) => x % 2, range(10))).toString() === "[0, 2, 4, 6, 8]",
+  "filterfalse() failed"
+);
+
+assert(
+  listComp(groupby("AAAABBBCCDAABBB"), (x) => x[0]).toString() ===
+    "A,B,C,D,A,B",
+  "groupby() failed"
+);
+assert(
+  listComp(groupby("AAAABBBCCD"), (x) => list(x[1])).toString() ===
+    "[A, A, A, A],[B, B, B],[C, C],[D]",
+  "groupby() failed"
+);
+
+assert(list(islice("ABCDEFG", 2)).toString() === "[A, B]", "islice() failed");
+assert(
+  list(islice("ABCDEFG", 2, 4)).toString() === "[C, D]",
+  "islice() failed"
+);
+assert(
+  list(islice("ABCDEFG", 2, null)).toString() === "[C, D, E, F, G]",
+  "islice() failed"
+);
+assert(
+  list(islice("ABCDEFG", 2, null, 2)).toString() === "[C, E, G]",
+  "islice() failed"
+);
+
+assert(
+  list(permutations("ABCD", 2)).toString() ===
+    "[(A, B), (A, C), (A, D), (B, A), (B, C), (B, D), (C, A), (C, B), (C, D), (D, A), (D, B), (D, C)]",
+  "permutations() failed"
+);
+assert(
+  list(permutations(range(3))).toString() ===
+    "[(0, 1, 2), (0, 2, 1), (1, 0, 2), (1, 2, 0), (2, 0, 1), (2, 1, 0)]",
+  "permutations() failed"
+);
+
+assert(
+  list(product(1, "ABCDE", "xy")).toString() ===
+    "[(A, x), (A, y), (B, x), (B, y), (C, x), (C, y), (D, x), (D, y), (E, x), (E, y)]",
+  "product() failed"
+);
+assert(
+  list(product(3, range(2))).toString() ===
+    "[(0, 0, 0), (0, 0, 1), (0, 1, 0), (0, 1, 1), (1, 0, 0), (1, 0, 1), (1, 1, 0), (1, 1, 1)]",
+  "product() failed"
+);
+
+assert(list(repeat(10, 3)).toString() === "[10, 10, 10]", "repeat() failed");
+assert(
+  list(
+    starmap(pow, [
+      [2, 5],
+      [3, 2],
+      [10, 3],
+    ])
+  ).toString() === "[32, 9, 1000]",
+  "starmap() failed"
+);
+assert(
+  list(takewhile((x) => x < 5, [1, 4, 6, 4, 1])).toString() === "[1, 4]",
+  "takewhile() failed"
+);
+
+const t = tee(iter("ABCDEFG"));
+assert(list(t[0]).toString() === "[A, B, C, D, E, F, G]", "tee() failed");
+assert(list(t[1]).toString() === "[A, B, C, D, E, F, G]", "tee() failed");
+
+assert(
+  list(zip_longest("-", "ABCD", "xy")).toString() ===
+    "[(A, x), (B, y), (C, -), (D, -)]",
+  "zip_longest() failed"
+);
 
 print("All tests passed");

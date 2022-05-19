@@ -1,4 +1,4 @@
-const { next, list, range, tuple, len, reversed, print, pow, iter, bool, dict, enumerate, zip } = require('../core/core')
+const { next, list, range, tuple, len, reversed, iter, bool, dict, enumerate, zip } = require('../core/core')
 const { listComp } = require('../util/util')
 
 function* accumulate(iterable, func, initial=null) {
@@ -398,50 +398,3 @@ module.exports = {
   tee,
   zip_longest,
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-// print(list(accumulate([1, 2, 3, 4, 5], (a, b) => a + b)));
-// print(list(chain([1, 2, 3], [4, 5, 6], [7, 8, 9])));
-// print(list(combinations([1, 2, 3, 4, 5], 3)));
-// print(list(combinations_with_replacement('abc', 2)));
-// print(list(compress('abcdef', [1,0,1,0,1,1])));
-
-// const my_count = count(1, 2);
-// for (let i = 0; i < 10; i++) {
-//   print(next(my_count));
-// }
-
-// const my_cycle = cycle('abc');
-// for (let i = 0; i < 10; i++) {
-//   print(next(my_cycle));
-// }
-
-// print(list(pairwise("ABCDEFG")));
-
-// print(list(dropwhile((x) => x < 5, [1,4,6,4,1])))
-// print(list(filterfalse((x) => x % 2, range(10))))
-
-// print(listComp(groupby("AAAABBBCCDAABBB"), (x) => x[0]));
-// print(listComp(groupby("AAAABBBCCD"), (x) => list(x[1])));
-
-// print(list(islice('ABCDEFG', 2)))
-// print(list(islice('ABCDEFG', 2, 4)))
-// print(list(islice('ABCDEFG', 2, null)))
-// print(list(islice('ABCDEFG', 2, null, 2)))
-
-// print(list(permutations('ABCD', 2)));
-// print(list(permutations(range(3))));
-
-// print(list(product(1, "ABCDE", "xy")));
-// print(list(product(3, range(2))));
-
-// print(list(repeat(10, 3)));
-// print(list(starmap(pow, [[2, 5], [3, 2], [10, 3]])));
-// print(list(takewhile((x) => x < 5, [1,4,6,4,1])));
-
-// const t = tee(iter("ABCDEFG"));
-// print(list(t[0]));
-// print(list(t[1]));
-
-// print(list(zip_longest('-', 'ABCD', 'xy')));
