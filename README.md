@@ -1,6 +1,7 @@
 # import-python
 Python's built-in functions and classes ported to JavaScript + the random library. Most are pretty close to the same functionality as the python version of the function or class.
 
+
 To import python functions, you can add this to the top of your code:
 ```js
 const { py_import_star, py_import } = require("import-python")
@@ -20,7 +21,13 @@ for (let [i, number] of enumerate(range(10, 20, 2))) {
 print(random.randint(1, 5))
 ```
 
-# Core Functions
+
+Full documentation can be located at:
+https://import-python.readthedocs.io/en/latest/index.html
+
+
+
+# Core
   - Complex,
   - Tuple,
   - List,

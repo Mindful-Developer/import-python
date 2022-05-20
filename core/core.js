@@ -11,26 +11,58 @@ const {
   FileObject,
  } = require("./core-classes.js");
 
-function abs(num) {
-  return Math.abs(num);
+/**
+ * Return the absolute value of a number. The argument may be an integer, a floating point number.
+ * 
+ * @param {number} - The number to take the absolute value of.
+ * @returns {number} - The absolute value of x.
+ */
+function abs(x) {
+  return Math.abs(x);
 }
 
+/**
+ * Return True if all elements of the iterable are true.
+ * 
+ * @param {iterable} - The iterable to check.
+ * @returns {boolean}
+ */
 function all(array) {
   array = [...array];
   return array.reduce((a, b) => bool(a) && bool(b));
 }
 
+/**
+ * Return True if any element of the iterable is true.
+ * 
+ * @param {iterable} - The iterable to check.
+ * @returns {boolean}
+ */
 function any(array) {
   array = [...array];
   return array.reduce((a, b) => bool(a) || bool(b));
 }
 
+/**
+ * Assert that the given condition is true. If it is not, raise an error.
+ * 
+ * @param {boolean} - The condition to assert.
+ * @param {string} - The error message to raise if the condition is false.
+ * @param {boolean} - The expected condition result.
+ * @throws {Error} - If the condition is false.
+ */
 function assert(condition, message, expected = true) {
   if (condition !== expected) {
     throw new Error(message || "Assertion failed");
   }
 }
 
+/**
+ * return a string containing a printable representation of an object, but escape the non-ASCII characters in the string.
+ * 
+ * @param {*} obj 
+ * @returns 
+ */
 function ascii(obj) {
   if (obj === null) {
     return "None";
