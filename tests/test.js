@@ -1,5 +1,6 @@
 const fs = require("fs");
-const { py_import_star } = require("../import-python");
+const { py_import_star, py_import } = require("../import-python");
+const { seed } = require("../random/random");
 const { listComp } = require("../util/util");
 
 py_import_star("core");
@@ -212,16 +213,16 @@ assert(my_list.toString() === "[9, 8, 6, 5, 4, 3, 1]", "List toString failed");
 
 // Random tests
 vals = new Set();
-for (let i = 0; i < 1000; i++) {
-  rand = random().random();
+for (let i = 0; i < 10000; i++) {
+  rand = random();
   vals.add(rand);
   assert(rand >= 0 && rand <= 1, "Random.random() failed range check");
 }
-assert(vals.size >= 990, "Random.random() failed uniqueness check");
+assert(vals.size >= 9999, "Random.random() failed uniqueness check");
 
 vals = [];
 for (i = 0; i < 1000; i++) {
-  rand = random().randint(1, 10);
+  rand = randint(1, 10);
   vals.push(rand);
   assert(rand >= 1 && rand <= 10, "Random.randint() failed range check");
 }
@@ -239,53 +240,53 @@ assert(
     vals.length === 1000,
   "Random.randint() failed uniqueness check"
 );
-rand = random(1);
-vals = [];
-for (i = 0; i < 10; i++) {
-  vals.push(rand.randint(1, 10000));
-}
-comps = [2706, 5128, 8007, 8907, 5865, 3484, 4915, 3692, 3036, 4116];
-for (let i = 0; i < 10; i++) {
-  assert(vals[i] === comps[i], "Random seeding failed");
-}
 selection = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 for (let i = 0; i < 1000; i++) {
-  rand = random().choice(selection);
+  rand = choice(selection);
   assert(selection.includes(rand), "Random.choice() failed");
 }
-rand = random(1).choices(selection, 10);
-comps = [3, 6, 9, 9, 6, 4, 5, 4, 4, 5];
-for (let i = 0; i < 10; i++) {
-  assert(rand[i] === comps[i], "Random.choices() failed");
-}
-rand = random(1).sample(selection, 5);
-comps = [3, 6, 9, 10, 5];
-for (let i = 0; i < 5; i++) {
-  assert(rand[i] === comps[i], "Random.sample() failed");
-}
-rand = random(1).shuffle(selection);
-comps = [3, 6, 9, 4, 10, 1, 2, 5, 8, 7];
-for (let i = 0; i < 10; i++) {
-  assert(rand[i] === comps[i], "Random.shuffle() failed");
-}
 for (let i = 0; i < 1000; i++) {
-  rand = random().uniform(9, 10);
+  rand = uniform(9, 10);
   assert(rand >= 9 && rand <= 10, "Random.uniform() failed");
 }
 for (let i = 0; i < 1000; i++) {
-  rand = random().randrange(10, 20);
+  rand = randrange(10, 20);
   assert(rand >= 10 && rand < 20, "Random.randrange() failed");
 }
 for (let i = 0; i < 1000; i++) {
-  rand = random().randrange(10, 20, 2);
+  rand = randrange(10, 20, 2);
   assert(
     rand >= 10 && rand < 20 && rand % 2 === 0,
     "Random.randrange() failed"
   );
 }
 for (let i = 0; i < 1000; i++) {
-  rand = random().randrange(20);
+  rand = randrange(20);
   assert(rand >= 0 && rand < 20, "Random.randrange() failed");
+}
+seed(1);
+vals = [];
+for (i = 0; i < 10; i++) {
+  vals.push(randint(1, 10000));
+}
+comps = [1194, 9002, 2501, 4359, 2659, 769, 9622, 5289, 1100, 576];
+for (let i = 0; i < 10; i++) {
+  assert(vals[i] === comps[i], "Random seeding failed");
+}
+rand = choices(selection, 10);
+comps = [5, 1, 2, 2, 8, 10, 10, 3, 9, 6];
+for (let i = 0; i < 10; i++) {
+  assert(rand[i] === comps[i], "Random.choices() failed");
+}
+rand = sample(selection, 5);
+comps = [5, 8, 10, 3, 9];
+for (let i = 0; i < 5; i++) {
+  assert(rand[i] === comps[i], "Random.sample() failed");
+}
+rand = shuffle(selection);
+comps = [8, 7, 5, 10, 6, 9, 4, 1, 2, 3];
+for (let i = 0; i < 10; i++) {
+  assert(rand[i] === comps[i], "Random.shuffle() failed");
 }
 
 // Test built-in functions
