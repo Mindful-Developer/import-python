@@ -32,11 +32,6 @@ class Random {
     return this.seed;
   }
 
-  /**
-   * Generate a random number
-   * @param [number] a - incoming number
-   * @returns [number] a random number
-   */
   #mulberry32(a) {
     return function () {
       a |= 0;
@@ -47,7 +42,12 @@ class Random {
     };
   }
 
-  random() {
+  /**
+   * Generate a random number using the mulberry32 algorithm.
+   * 
+   * @returns [number] a random number between 0 and 1
+   */
+  genRandom() {
     this.seed = this.#mulberry32(this.seed * 1000000000)();
     return this.seed;
   }
@@ -166,7 +166,7 @@ function randrange(stop, start = null, step = 1) {
  * @returns [number] a random number between 0 and 1
  */
 function random() {
-  return GLOBALRANDOM.random();
+  return GLOBALRANDOM.genRandom();
 }
 
 /**
