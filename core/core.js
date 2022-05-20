@@ -60,8 +60,8 @@ function assert(condition, message, expected = true) {
 /**
  * return a string containing a printable representation of an object, but escape the non-ASCII characters in the string.
  * 
- * @param {*} obj 
- * @returns 
+ * @param {Object} - the object
+ * @returns {string}
  */
 function ascii(obj) {
   if (obj === null) {
@@ -91,10 +91,23 @@ function ascii(obj) {
   return obj.toString();
 }
 
+/**
+ * Convert an integer number to a binary string
+ *
+ * @param {number} - the number to convert
+ * @returns {string}
+ */
 function bin(x) {
   return x.toString(2);
 }
 
+/**
+ * Returns a boolean. X is converted to a boolean
+ * Using a truth test.
+ *
+ * @param {Object} - the object to convert
+ * @returns {boolean}
+ */
 function bool(x) {
   if (isIterable(x)) {
     return x.length > 0;
