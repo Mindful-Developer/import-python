@@ -18,7 +18,7 @@ Quickstart
 
    const { py_import_star, py_import } = require('import-python')
    const itertools = py_import('itertools') // import a module
-   const { random } = py_import_star('random') // destructured import
+   const random = py_import('random') // destructured import
 
    // import all Python core built-in function and classes into the global namespace
    py_import_star('core')

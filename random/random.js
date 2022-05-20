@@ -1,10 +1,10 @@
-const { list } = require("../core/core")
+const { List } = require("../core/core")
 
 /** Class to generate random numbers. */
 class Random {
   /**
    * Create a random number.
-   * @param [number] seed 
+   * @param {number} seed 
    */
   constructor(seed = null) {
     this.seed = seed;
@@ -12,9 +12,9 @@ class Random {
 
   /**
    * Set the seed of the random number generator.
-   * @param [number | string | boolean] seed
-   * @returns [number] the seed
-   * @throws [Error] if the seed is not a number, string, or boolean
+   * @param {number | string | boolean} seed
+   * @returns {number} the seed
+   * @throws {Error} if the seed is not a number, string, or boolean
    */
   setSeed(seed) {
     if (typeof seed === "string") {
@@ -45,7 +45,7 @@ class Random {
   /**
    * Generate a random number using the mulberry32 algorithm.
    * 
-   * @returns [number] a random number between 0 and 1
+   * @returns {number} a random number between 0 and 1
    */
   genRandom() {
     this.seed = this.#mulberry32(this.seed * 1000000000)();
@@ -54,11 +54,11 @@ class Random {
 }
 
 /**
- * Generate a random integer beteen start and end.
+ * Generate a random integer between start and end.
  * 
- * @param [number] start - the start of the range (inclusive)
- * @param [number] end - the end of the range (inclusive)
- * @returns [number] a random number between start and end
+ * @param {number} - the start of the range (inclusive)
+ * @param {number} - the end of the range (inclusive)
+ * @returns {number} a random number between start and end
  */
 function randint(start, end) {
   return Math.floor(random() * (end - start + 1)) + start;
@@ -67,8 +67,8 @@ function randint(start, end) {
 /**
  * Return a random element from a non-empty iterable.
  * 
- * @param [iterable] iterable - the iterable 
- * @returns [object] a random element from the iterable
+ * @param {iterable} - the iterable 
+ * @returns {object} a random element from the iterable
  */
 function choice(iterable) {
   return iterable[randint(0, len(iterable) - 1)];
@@ -77,9 +77,9 @@ function choice(iterable) {
 /**
  * Return k random elements from a non-empty iterable.
  * 
- * @param [iterable] iterable - the iterable
- * @param [number] k - the number of elements to return 
- * @returns [List] a list of k random elements from the iterable
+ * @param {iterable} - the iterable
+ * @param {number} - the number of elements to return 
+ * @returns {List} a list of k random elements from the iterable
  */
 function choices(iterable, k) {
   let result = list();
@@ -92,8 +92,8 @@ function choices(iterable, k) {
 /**
  * Shuffle an array in place.
  * 
- * @param [iterable] iterable 
- * @returns [List] a shiffled list of the elements of the iterable
+ * @param {iterable} - the iterable to shuffle 
+ * @returns {List} a shiffled list of the elements of the iterable
  */
 function shuffle(iterable) {
   let result = [...iterable];
@@ -107,9 +107,9 @@ function shuffle(iterable) {
 /**
  * Return k elements from a non-empty iterable without replacement.
  * 
- * @param [iterable] iterable 
- * @param [number] k 
- * @returns [List] a list of k elements from the iterable
+ * @param {iterable} - the iterable 
+ * @param {number} - the number of elements to return
+ * @returns {List} a list of k elements from the iterable
  */
 function sample(iterable, k = 1) {
   iterable = [...iterable];
@@ -125,9 +125,9 @@ function sample(iterable, k = 1) {
 /**
  * Return a number between start and end.
  * 
- * @param [number] start 
- * @param [number] end 
- * @returns [number] a random number between start and end
+ * @param {number} - the start of the range (inclusive) 
+ * @param {number} - the end of the range (inclusive) 
+ * @returns {number} a random number between start and end
  */
 function uniform(start, end) {
   return random() * (end - start) + start;
@@ -136,10 +136,10 @@ function uniform(start, end) {
 /**
  * Return a random integer between start and end with optional step.
  * 
- * @param [number] stop - the stop value
- * @param [number] start - the start value
- * @param [number] step - the step value
- * @returns [number] a random number between start and stop
+ * @param {number} - the stop of the range (exclusive)
+ * @param {number} - the start of the range (inclusive)
+ * @param {number} - the step between numbers
+ * @returns {number} a random number between start and stop
  */
 function randrange(stop, start = null, step = 1) {
   if (start !== null) {
@@ -163,7 +163,7 @@ function randrange(stop, start = null, step = 1) {
 /**
  * Return a random number between 0 and 1.
  * 
- * @returns [number] a random number between 0 and 1
+ * @returns {number} a random number between 0 and 1
  */
 function random() {
   return GLOBALRANDOM.genRandom();
@@ -172,8 +172,8 @@ function random() {
 /**
  * Set the seed of the random number generator.
  * 
- * @param [number, string, boolean] seed - the seed
- * @returns [number] the seed
+ * @param {number | string | boolean} seed - the seed
+ * @returns {number} the seed
  */
 function seed(seed) {
   return GLOBALRANDOM.setSeed(seed);

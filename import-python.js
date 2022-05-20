@@ -1,7 +1,7 @@
 /**
  * import a python module
  * 
- * @param {string} name - the name of the module
+ * @param {string} - the name of the module
  * @returns {Object} the module
  */
 function py_import(name) {
@@ -12,7 +12,7 @@ function py_import(name) {
  * import all functions and classes from a module into 
  * the current namespace
  * 
- * @param {string} module - the module
+ * @param {string} - the module
  */
 function py_import_star(name) {
   Object.entries(require(`./${name}/${name}`)).forEach(
