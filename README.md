@@ -1,31 +1,32 @@
 # import-python
 Python's built-in functions and classes ported to JavaScript + the random library. Most are pretty close to the same functionality as the python version of the function or class.
 
-To import all python functions, you can can add this to the top of your code:
+To import python functions, you can add this to the top of your code:
 ```js
 const { py_import_star, py_import } = require("import-python")
 
 // Import everything from a module into global variables
 py_import_star("core")
 
-// Load specific functions, classes or modules
-const { random } = py_import("random")
+// Load specific functions, classes or modules (supports destructuring)
+const random = py_import("random")
 
 
+// example usage
 for (let [i, number] of enumerate(range(10, 20, 2))) {
   print(`(${i}:${number})`, end=", ")
 }
+
+print(random.randint(1, 5))
 ```
 
-# Core Classes
+# Core Functions
   - Complex,
   - Tuple,
   - List,
   - Dict,
   - FrozenSet,
   - FileObject,
-  
-# Core Functions
   - abs,
   - all,
   - any,
@@ -83,11 +84,19 @@ for (let [i, number] of enumerate(range(10, 20, 2))) {
   - tuple,
   - type,
   - zip,
-  - raise,
+  - raise
 
 # Random:
   - Random,
-  - random
+  - seed,
+  - random,
+  - randint,
+  - randrange,
+  - choice,
+  - choices,
+  - sample,
+  - shuffle,
+  - uniform
 
 # Itertools:
   - accumulate,
@@ -108,4 +117,4 @@ for (let [i, number] of enumerate(range(10, 20, 2))) {
   - starmap,
   - takewhile,
   - tee,
-  - zip_longest,
+  - zip_longest
