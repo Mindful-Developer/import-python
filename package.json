@@ -1,6 +1,6 @@
 {
   "name": "import-python",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "description": "Python built-in functions and classes in JavaScript with no dependencies",
   "main": "import-python.js",
   "scripts": {
