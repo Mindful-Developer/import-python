@@ -11,6 +11,14 @@ Full documentation can be located at:
 https://import-python.readthedocs.io/en/latest/index.html
 
 
+# Usage
+
+## Installation:
+```
+npm install import-python
+```
+
+## QuickStart:
 To import python functions, you can add this to the top of your code:
 ```js
 const { py_import_star, py_import } = require("import-python")
