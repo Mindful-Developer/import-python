@@ -90,8 +90,8 @@ assert(item === 1 && !my_dict.get("a"), "Dict pop failed");
 assert(my_dict.keys().length === 1, "Dict pop2 failed");
 my_dict.clear();
 assert(my_dict.keys().length === 0, "Dict clear failed");
-my_dict.set("a", 1);
-my_dict.set("b", 2);
+my_dict.setItem("a", 1);
+my_dict.setItem("b", 2);
 assert(my_dict.get("a") === 1 && my_dict.get("b") === 2, "Dict set failed");
 my_dict2 = my_dict.copy();
 assert(
@@ -339,7 +339,7 @@ assert(hasattr(item, "a") === false, "delattr() failed");
 assert(hasattr(item, "b") === true, "delattr() failed");
 // assert(
 //   dir() ==
-//     "global,clearInterval,clearTimeout,setInterval,setTimeout,queueMicrotask,performance,clearImmediate,setImmediate,util,fs,os,child_process,Complex,Tuple,Random,List,Dict,FrozenSet,FileObject,abs,all,any,assert,ascii,bin,bool,breakpoint,bytearray,bytes,callable,chr,complex,delattr,dict,dir,divmod,enumerate,exec,filter,float,format,frozenset,getattr,hasattr,help,hex,input,int,isinstance,issubclass,iter,len,list,locals,map,max,min,next,oct,open,ord,pow,print,range,repr,reversed,round,set,setattr,slice,sorted,str,sum,tuple,type,zip,__import__,raise,random,my_dict,item,my_dict2,dict3,dict4,my_frozenset,my_tuple,my_list,reverse,my_list2,vals,rand,i,comps,selection,b_arr,arr,a2,str_b,num_b",
+//     "global,clearInterval,clearTimeout,setInterval,setTimeout,queueMicrotask,performance,clearImmediate,setImmediate,util,fs,os,child_process,Complex,Tuple,Random,List,Dict,FrozenSet,FileObject,abs,all,any,assert,ascii,bin,bool,breakpoint,bytearray,bytes,callable,chr,complex,delattr,dict,dir,divmod,enumerate,exec,filter,float,format,frozenset,getattr,hasattr,hex,input,int,isinstance,issubclass,iter,len,list,locals,map,max,min,next,oct,open,ord,pow,print,range,repr,reversed,round,set,setattr,slice,sorted,str,sum,tuple,type,zip,__import__,raise,random,my_dict,item,my_dict2,dict3,dict4,my_frozenset,my_tuple,my_list,reverse,my_list2,vals,rand,i,comps,selection,b_arr,arr,a2,str_b,num_b",
 //   "dir() failed"
 // );
 assert(dir(item) == "b", "dir() failed");

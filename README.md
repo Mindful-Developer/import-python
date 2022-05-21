@@ -1,6 +1,9 @@
 # import-python
 Python's built-in functions and classes ported to JavaScript + the random library. Most are pretty close to the same functionality as the python version of the function or class.
 
+Full documentation can be located at:
+https://import-python.readthedocs.io/en/latest/index.html
+
 
 To import python functions, you can add this to the top of your code:
 ```js
@@ -22,18 +25,13 @@ print(random.randint(1, 5))
 ```
 
 
-Full documentation can be located at:
-https://import-python.readthedocs.io/en/latest/index.html
-
-
-
 # Core
   - Complex,
-  - Tuple,
-  - List,
   - Dict,
-  - FrozenSet,
   - FileObject,
+  - FrozenSet,
+  - List,
+  - Tuple,
   - abs,
   - all,
   - any,
@@ -59,7 +57,6 @@ https://import-python.readthedocs.io/en/latest/index.html
   - frozenset,
   - getattr,
   - hasattr,
-  - help,
   - hex,
   - input,
   - int,
@@ -78,6 +75,7 @@ https://import-python.readthedocs.io/en/latest/index.html
   - ord,
   - pow,
   - print,
+  - raise
   - range,
   - repr,
   - reversed,
@@ -91,7 +89,6 @@ https://import-python.readthedocs.io/en/latest/index.html
   - tuple,
   - type,
   - zip,
-  - raise
 
 # Random:
   - Random,

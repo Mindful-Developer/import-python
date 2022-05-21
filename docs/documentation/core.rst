@@ -12,6 +12,7 @@ Classes
 .. autoclass:: Tuple
   :members:
 
+
 .. autoclass:: List
   :members:
 
@@ -77,8 +78,6 @@ Functions
 .. autofunction:: getattr
 
 .. autofunction:: hasattr
-
-.. autofunction:: help
 
 .. autofunction:: hex
 

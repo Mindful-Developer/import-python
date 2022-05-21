@@ -63,6 +63,7 @@ js_source_path = [
   '../',
   '../random',
   '../core',
+  '../itertools',
 ]
 
 root_for_relative_js_paths = '../'

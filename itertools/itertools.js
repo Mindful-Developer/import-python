@@ -1,6 +1,15 @@
 const { next, list, range, tuple, len, reversed, iter, bool, dict, enumerate, zip } = require('../core/core')
 const { listComp } = require('../util/util')
 
+/**
+ * Add the elements of an iterable (or something that can be converted to an iterable)
+ * to produce a single value.
+ * 
+ * @param {Iterable} - The iterable to accumulate over.
+ * @param {Function} - The function to use to combine the elements.
+ * @param {number} - The initial value to start with.
+ * @returns {Generator} - A generator that yields the accumulated value.
+ */
 function* accumulate(iterable, func, initial=null) {
   let it = iter(iterable);
   let total = initial;
@@ -22,6 +31,12 @@ function* accumulate(iterable, func, initial=null) {
   }
 }
 
+/**
+ * Chain together the results of several iterables.
+ * 
+ * @param  {...Iterable} - The iterables to chain together.
+ * @returns {Generator} - A generator that yields the results of the chained iterables.
+ */
 function* chain(...iterables) {
   for (let it of iterables) {
     for (let element of it) {
@@ -30,6 +45,13 @@ function* chain(...iterables) {
   }
 }
 
+/**
+ * Return successive r-length combinations of elements in the iterable.
+ * 
+ * @param {Iterable} - The iterable to combine over.
+ * @param {number} - The number of elements to combine.
+ * @returns {Generator} - A generator that yields the combinations.
+ */
 function* combinations(iterable, r) {
   let pool = tuple(iterable);
   let n = len(pool);
@@ -57,6 +79,15 @@ function* combinations(iterable, r) {
   }
 }
 
+// combinations_with_replacement(iterable, r)
+/**
+ * Return successive r-length combinations of elements in the iterable.
+ * The combinations can have duplicate elements.
+ * 
+ * @param {Iterable} - The iterable to combine over.
+ * @param {number} - The number of elements to combine.
+ * @returns {Generator} - A generator that yields the combinations.
+ */
 function* combinations_with_replacement(iterable, r) {
   let pool = tuple(iterable);
   let n = len(pool);
@@ -86,6 +117,13 @@ function* combinations_with_replacement(iterable, r) {
   }
 }
 
+/**
+ * Return elements from an iterable as long as the predicate is true.
+ * 
+ * @param {Iterable} - The iterable to filter.
+ * @param {Iterable} - The iterable of booleans to filter by.
+ * @returns {Generator} - A generator that yields the filtered elements.
+ */
 function* compress(data, selectors) {
   for (let i = 0; i < len(data); i++) {
     if (selectors[i]) {
@@ -94,6 +132,13 @@ function* compress(data, selectors) {
   }
 }
 
+/**
+ * Return an infinite iterator of integers starting at start and increasing by step.
+ * 
+ * @param {number} - The starting value.
+ * @param {number} - The step size.
+ * @returns {Generator} - A generator that yields the integers.
+ */
 function* count(start=0, step=1) {
   let n = start;
   while (true) {
@@ -102,6 +147,13 @@ function* count(start=0, step=1) {
   }
 }
 
+/**
+ * Return an iterator that returns elements from the iterable and then
+ * repeats the same sequence forever.
+ * 
+ * @param {Iterable} - The iterable to repeat.
+ * @returns {Generator} - A generator that yields the repeated elements.
+ */
 function* cycle(iterable) {
   let it = iterable;
   let cache = [];
@@ -115,6 +167,12 @@ function* cycle(iterable) {
   }
 }
 
+/**
+ * Return an iterator that drops elements from the iterable as long as the predicate is true.
+ * 
+ * @param {function} - The function to filter by.
+ * @param {Iterable} - The iterable to filter.
+ */
 function* dropwhile(predicate, iterable) {
   let it = iter(iterable);
   for (let x of it) {
@@ -128,6 +186,12 @@ function* dropwhile(predicate, iterable) {
   }
 }
 
+/**
+ * Return an iterator that filters elements from the iterable as long as the predicate is true.
+ * 
+ * @param {function} - The function to filter by.
+ * @param {Iterable} - The iterable to filter.
+ */
 function* filterfalse(predicate, iterable=null) {
   if (iterable === null) {
     [predicate, iterable] = [bool, predicate];
@@ -188,10 +252,28 @@ class Groupby {
   }
 }
 
+/**
+ * Return an iterator that groups elements from the iterable into a sequence of tuples.
+ * The first element of each tuple is the key to the group.
+ * The second element of each tuple is the iterator of the group.
+ * 
+ * @param {Iterable} - The iterable to group.
+ * @param {function} - The function to group by.
+ * @returns {Generator} - A generator that yields the grouped elements.
+ */
 function groupby(iterable, key=null) {
   return new Groupby(iterable, key);
 }
 
+/**
+ * Return an iterator that returns selected elements from the iterable.
+ * 
+ * @param {Iterable} - The iterable to slice.
+ * @param {number} - The starting index.
+ * @param {number} - The ending index.
+ * @param {number} - The step size.
+ * @returns {Generator} - A generator that yields the sliced elements.
+ */
 function* islice(
   iterable,
   start = 0,
@@ -237,12 +319,25 @@ function* islice(
   }
 }
 
+/**
+ * Return an iterator that returns pairs of elements from the iterable.
+ * 
+ * @param {Iterable} - The iterable to pair.
+ * @returns {Generator} - A generator that yields the paired elements.
+ */
 function pairwise(iterable) {
   const [a, b] = tee(iterable);
   next(b, null);
   return zip(a, b);
 }
 
+/**
+ * Return an iterator that returns permutations of the elements from the iterable.
+ * 
+ * @param {Iterable} - The iterable to permute.
+ * @param {number} - The number of elements to permute.
+ * @returns {Generator} - A generator that yields the permuted elements.
+ */
 function* permutations(iterable, r=null) {
   const pool = tuple(iterable);
   let n = len(pool);
@@ -277,6 +372,13 @@ function* permutations(iterable, r=null) {
   }
 }
 
+/**
+ * Return an iterator that returns the cartesian product of the iterables.
+ * 
+ * @param {number} - The number of times to repeat the product.
+ * @param  {...any} - The iterables to product.
+ * @returns {Generator} - A generator that yields the cartesian product.
+ */
 function* product(repeat = 1, ...args) {
   if (typeof repeat !== "number") {
     args = [repeat, ...args];
@@ -307,6 +409,12 @@ function* product(repeat = 1, ...args) {
   }
 }
 
+/**
+ * Return an iterator that returns the same element n times.
+ * 
+ * @param {any} - The element to repeat.
+ * @param {number} - The number of times to repeat the element.
+ */
 function* repeat(object, times=null) {
   if (times === null) {
     while (true) {
@@ -319,12 +427,26 @@ function* repeat(object, times=null) {
   }
 }
 
+/**
+ * Return an iterator that returns the results of applying func to the elements from the iterable.
+ * 
+ * @param {function} - The function to apply to the elements.
+ * @param {Iterable} - The iterable to apply the function to.
+ * @returns {Generator} - A generator that yields the results of applying func to the elements.
+ */
 function* starmap(func, iterable) {
   for (let args of iterable) {
     yield func(...args);
   }
 }
 
+/**
+ * Return an iterator that returns elements from the iterable as long as the predicate is true.
+ * 
+ * @param {function} - The predicate function.
+ * @param {Iterable} - The iterable to take elements from.
+ * @returns {Generator} - A generator that yields the elements from the iterable.
+ */
 function* takewhile(predicate, iterable) {
   for (let element of iterable) {
     if (predicate(element)) {
@@ -335,6 +457,13 @@ function* takewhile(predicate, iterable) {
   }
 }
 
+/**
+ * Return an iterator that returns n independent iterators of the iterable.
+ * 
+ * @param {Iterable} - The iterable to tee.
+ * @param {number} - The number of iterators to return.
+ * @returns {Generator} - A generator that yields the iterators.
+ */
 function tee(iterable, n=2) {
   const it = list(iterable);
   function* gen(mydeque) {
@@ -361,6 +490,15 @@ function tee(iterable, n=2) {
   return tuple(temp);
 }
 
+/**
+ * Return an iterator that returns elements from the iterables. The iterator stops 
+ * when the longest iterable is exhausted. If the iterables are of different lengths,
+ * missing values are filled with the fillvalue.
+ * 
+ * @param {Any} - The fillvalue to use.
+ * @param  {...any} - The iterables to zip.
+ * @returns {Generator} - A generator that yields the zipped elements.
+ */
 function* zip_longest(fillvalue=null, ...args) {
   let longest = 0;
   for (let arg of args) {

@@ -116,10 +116,18 @@ function bool(x) {
   }
 }
 
+/** This function is used to pause the debugger. */
 function breakpoint() {
   debugger;
 }
 
+/**
+ * Return a new array of bytes. The Uint8Array is a typed array that is used to store the bytes
+ * and is a mutable sequence of integers in the range 0 to 255.
+ * 
+ * @param {iterable} - The iterable to convert to a Uint8Array. 
+ * @returns {Uint8Array}
+ */
 function bytearray(data) {
   if (typeof data === "string") {
     data = Buffer.from(data);
@@ -127,6 +135,12 @@ function bytearray(data) {
   return new Uint8Array(data);
 }
 
+/**
+ * Return a tuple containing an immutable sequence of integers from 0 to 255.
+ * 
+ * @param {iterable} - The iterable to convert to a byte array.
+ * @returns {Tuple}
+ */
 function bytes(data) {
   if (typeof data === "string") {
     data = Buffer.from(data);
@@ -141,14 +155,35 @@ function bytes(data) {
   return tuple(a2);
 }
 
+/**
+ * Return true if the given object is a function or class and false otherwise.
+ * 
+ * @param {Object} - The object to check. 
+ * @returns {boolean}
+ */
 function callable(obj) {
   return typeof obj === "function";
 }
 
-function chr(x) {
-  return String.fromCharCode(x);
+/**
+ * Return a string containing a character whose Unicode code is the integer i. This
+ * is the inverse of ord().
+ * 
+ * @param {number} - The integer to convert to a character. 
+ * @returns {string}
+ */
+function chr(i) {
+  return String.fromCharCode(i);
 }
 
+/**
+ * Return a complex number with the given real and imaginary parts. If a string
+ * is given, it must be in the form "r [+-] xi". Ex: complex("2 + 3i").
+ * 
+ * @param {number | string} - The real part of the complex number or a string in the form "r [+-] xi".
+ * @param {number} - The imaginary part of the complex number.
+ * @returns {Complex}
+ */
 function complex(x, i = 0) {
   if (typeof x === "string" && !i) {
     return Complex.fromString(x);
@@ -159,10 +194,34 @@ function complex(x, i = 0) {
   }
 }
 
+/**
+ * Delete an attribute from an object. If the attribute is a method, 
+ * it is removed from the object’s method table.
+ * 
+ * @param {Object} - The object to delete the attribute from.
+ * @param {string} - The name of the attribute to delete.
+ */
 function delattr(obj, name) {
   delete obj[name];
 }
 
+/**
+ * Return a dictionary created from the given iterable. The iterable must be an iterable containing
+ * two-element iterables representing key-value pairs.
+ * 
+ * @param {iterable} - The iterable to create a dictionary from.
+ * @returns {Dict}
+ */
+function dict(iterable) {
+  return new Dict(iterable);
+}
+
+/**
+ * Return a list of names in the given object.
+ * 
+ * @param {Object} - The object to get the names from. Defaults to the global object.
+ * @returns {Array}
+ */
 function dir(obj = global) {
   let result = [];
   for (let key in obj) {
@@ -173,39 +232,41 @@ function dir(obj = global) {
   return result;
 }
 
-function dict(iterable) {
-  return new Dict(iterable);
-}
-
+/**
+ * Return a tuple containing the integer division of x and y and the remainder.
+ * 
+ * @param {number} - The dividend.
+ * @param {number} - The divisor.
+ * @returns {Tuple} - The quotient and remainder.
+ */
 function divmod(num, den) {
   return tuple([Math.floor(num / den), num % den]);
 }
 
-function enumerate(array, start = 0, step = 1) {
+/**
+ * Return an enumerate object. It contains a pair (index, value) for each item in the array.
+ * This is a generator object that returns a tuple containing the index and value of each item.
+ * 
+ * @param {iterable} - The iterable to enumerate. 
+ * @param {number} - The starting index. Defaults to 0.
+ * @param {number} - The step. Defaults to 1.
+ * @returns {Tuple} The enumerate object.
+ */
+function* enumerate(array, start = 0, step = 1) {
   array = [...array];
-  return {
-    [Symbol.iterator]() {
-      return this;
-    },
-    next() {
-      if (!this.value) {
-        this.value = start;
-      }
-      if (this.value < start + step * array.length) {
-        this.value = this.value + step;
-        return {
-          value: tuple([
-            this.value - step,
-            array[(this.value - step - start) / step],
-          ]),
-          done: false,
-        };
-      }
-      return { done: true, value: null };
-    },
-  };
+  for (let i = start; i < array.length * step + start; i += step) {
+    yield tuple([i, array[(i - start) / step]]);
+  }
 }
 
+/**
+ * Execute the given code in a new context. The code must be a string.
+ * 
+ * @param {string} - The code to execute.
+ * @param {Object} - The global object. Defaults to the global object.
+ * @param {Object} - The local object. Defaults to an empty object.
+ * @returns {Object} The result of the code.
+ */
 function exec(code, globals = global, locals = {}) {
   let result = eval(code);
   if (result instanceof Function) {
@@ -214,15 +275,36 @@ function exec(code, globals = global, locals = {}) {
   return result;
 }
 
+/**
+ * Return a list of those items in iterable for which function(item) is true.
+ * 
+ * @param {function} - The function to filter by.
+ * @param {iterable} - The iterable to filter.
+ * @returns {Array}
+ */
 function filter(func, iterable) {
   iterable = [...iterable];
   return iterable.filter(func);
 }
 
+/**
+ * Return a floating point number constructed from a string.
+ * 
+ * @param {string} - The string to convert to a floating point number.
+ * @returns {number}
+ */
 function float(x) {
-  return parseFloat(x) / 1;
+  return parseFloat(x);
 }
 
+/**
+ * Convert a value to a string using the given format specifier. 
+ * Replaces all {} placeholders with the corresponding argument.
+ * 
+ * @param {string} - String to format.
+ * @param  {...any} - The arguments to format.
+ * @returns {string}
+ */
 function format(string, ...args) {
   let result = string;
   for (let i = 0; i < len(args); i++) {
@@ -231,10 +313,26 @@ function format(string, ...args) {
   return result;
 }
 
+/**
+ * Returns a new frozen set containing the items in iterable.
+ * 
+ * @param {iterable} - The iterable to freeze.
+ * @returns {FrozenSet}
+ */
 function frozenset(iterable) {
   return new FrozenSet(iterable);
 }
 
+/**
+ * Return the value of the named attribute of object. If the attribute is not
+ * found, default is returned if provided, otherwise AttributeError is raised.
+ * 
+ * @param {Object} - The object to get the attribute from.
+ * @param {string} - The name of the attribute to get.
+ * @param {any} - The default value to return if the attribute is not found.
+ * @returns {any}
+ * @throws {Error} If the attribute is not found and no default value is provided.
+ */
 function getattr(obj, name, defaultValue = undefined) {
   if (obj[name] !== undefined) {
     return obj[name];
@@ -242,30 +340,37 @@ function getattr(obj, name, defaultValue = undefined) {
   if (defaultValue !== undefined) {
     return defaultValue;
   }
-  throw new AttributeError(`${name}`);
+  throw new Error(`AttributeError: '${name}' not found`);
 }
 
+/**
+ * Return True if the named attribute is found in the given object, otherwise False.
+ * 
+ * @param {Object} - The object to check the attribute in.
+ * @param {string} - The name of the attribute to check.
+ * @returns {boolean}
+ */
 function hasattr(obj, name) {
   return obj[name] !== undefined;
 }
 
-function help(obj) {
-  if (obj === undefined) {
-    return "";
-  }
-  if (typeof obj === "function") {
-    return obj.toString();
-  }
-  if (typeof obj === "object") {
-    return `${obj.constructor.name}`;
-  }
-  return "";
-}
-
+/**
+ * Convert an integer to a hexadecimal string.
+ * 
+ * @param {number} - The integer to convert to a hexadecimal string.
+ * @returns {string}
+ */
 function hex(x) {
   return x.toString(16);
 }
 
+/**
+ * Synchronously prompt the user for input. The prompt is displayed on the standard output stream,
+ * and the user’s input is returned as a string.
+ * 
+ * @param {string} - The prompt to display to the user.
+ * @returns {string}
+ */
 function input(message = "") {
   process.stdout.write(message);
   let cmd;
@@ -284,6 +389,14 @@ function input(message = "") {
   return child_process.spawnSync(cmd, args, opts).stdout.toString().trim();
 }
 
+/**
+ * Return the integer value of x. If base is given, the string x is first converted 
+ * to a number in base base. If the string cannot be converted to an integer, a TypeError is raised.
+ * 
+ * @param {string} - The string to convert to an integer.
+ * @param {number} - The base to convert the string to. Defaults to 10.
+ * @returns {number}
+ */
 function int(x, base = 10) {
   if (typeof x === "number") {
     if (base !== 10) {
@@ -297,6 +410,13 @@ function int(x, base = 10) {
   }
 }
 
+/**
+ * Return True if the given object is an instance of the given type.
+ * 
+ * @param {any} - The object to check.
+ * @param {type} - The type to check against.
+ * @returns {boolean}
+ */
 function isinstance(x, Type) {
   try {
     return typeof x === typeof Type();
@@ -305,24 +425,39 @@ function isinstance(x, Type) {
   }
 }
 
+/**
+ * Return True if the given object is a subclass of the given type.
+ * 
+ * @param {any} - The object to check.
+ * @param {type} - The type to check against.
+ * @returns {boolean}
+ */
 function issubclass(x, type) {
   return x.prototype instanceof type;
 }
 
-function iter(obj, sentinal) {
-  if (sentinal) {
-    return obj[Symbol.iterator]();
-  } else {
-    const iterables = [Array, Set, Map, String];
-    for (let iterable of iterables) {
-      if (isinstance(obj, iterable)) {
-        return obj[Symbol.iterator]();
-      }
+/**
+ * Return an iterator over the given iterable.
+ * 
+ * @param {iterable} - The iterable to iterate over.
+ * @returns {Iterator}
+ */
+function iter(obj) {
+  const iterables = [Array, Set, Map, String];
+  for (let iterable of iterables) {
+    if (isinstance(obj, iterable)) {
+      return obj[Symbol.iterator]();
     }
-    throw new TypeError("iter() argument must be iterable");
   }
+  throw new TypeError("iter() argument must be iterable");
 }
 
+/**
+ * Return the length of the given object.
+ * 
+ * @param {iterable} - The object to get the length of.
+ * @returns {number}
+ */
 function len(array) {
   if (isIterable(array)) {
     array = [...array];
@@ -330,20 +465,45 @@ function len(array) {
   return array.length;
 }
 
+/**
+ * Create a list containing the items in iterable.
+ * 
+ * @param {iterable} - The iterable to create a list from.
+ * @returns {List}
+ */
 function list(iterable) {
   return new List(iterable);
 }
 
+/**
+ * return the global objects.
+ * 
+ * @returns {Object}
+ */
 function locals() {
   return { ...global };
 }
 
-// multiple iterables
+// map
+/**
+ * Return a new list containing the items returned by applying the given function 
+ * to the items of the given iterable.
+ * 
+ * @param {function} - The function to apply to each item.
+ * @param {iterable} - The iterable to map over.
+ * @returns {Array}
+ */
 function map(func, iterable) {
   iterable = [...iterable];
   return iterable.map(func);
 }
 
+/**
+ * Returns the maximum value in the given iterable.
+ * 
+ * @param {iterable} - The iterable to get the maximum value from.
+ * @returns {number}
+ */
 function max(array) {
   if (isIterable(array)) {
     array = [...array];
@@ -351,6 +511,12 @@ function max(array) {
   return Math.max(...array);
 }
 
+/**
+ * Return the minimum value in the given iterable.
+ * 
+ * @param {iterable} - The iterable to get the minimum value from.
+ * @returns {number}
+ */
 function min(array) {
   if (isIterable(array)) {
     array = [...array];
@@ -358,6 +524,13 @@ function min(array) {
   return Math.min(...array);
 }
 
+/**
+ * Return the next item from the iterator.
+ * 
+ * @param {Iterator} - The iterator to get the next item from.
+ * @param {any} - The default value to return if the iterator is exhausted.
+ * @returns {any}
+ */
 function next(iterator, def=undefined) {
   let result = iterator.next();
   if (result.done) {
@@ -370,22 +543,56 @@ function next(iterator, def=undefined) {
   return result.value;
 }
 
+/**
+ * Return the octal representation of an integer.
+ * 
+ * @param {number} - The integer to convert to an octal string.
+ * @returns {string}
+ */
 function oct(x) {
   return x.toString(8);
 }
 
+/**
+ * Open a file, returning a file object.
+ * 
+ * @param {string} - The path to the file to open.
+ * @param {string} - The mode to open the file in. Defaults to "r". (r, r+, w, w+, a, a+)
+ * @returns {FileObject}
+ */
 function open(file, mode = "r") {
   return new FileObject(file, mode);
 }
 
+/**
+ * Return the Unicode code point for the given character.
+ * 
+ * @param {string} - The character to get the Unicode code point for.
+ * @returns {number}
+ */
 function ord(x) {
   return x.charCodeAt(0);
 }
 
+/**
+ * Return x to the power of y.
+ * 
+ * @param {number} - The base.
+ * @param {number} - The exponent.
+ * @returns {number}
+ */
 function pow(num, exp) {
   return Math.pow(num, exp);
 }
 
+/**
+ * Print the given object to the console.
+ * 
+ * @param {any} - The object to print.
+ * @param {string} - The string to print after the object.
+ * @param {string} - The string to print between every object.
+ * @param  {...any} - Any additional objects to print.
+ */
 function print(text, end = "\n", sep = " ", ...args) {
   let result = "";
   if (typeof text === "string") {
@@ -412,6 +619,16 @@ function print(text, end = "\n", sep = " ", ...args) {
   process.stdout.write(result);
 }
 
+// range
+/**
+ * Return an iterator that produces a range of integers.
+ *
+ * @param {number} - The stop value of the range(exclusive). Will be the start value if
+ *                  the start value is given.
+ * @param {number} - The start value of the range(inclusive). Defaults to 0.
+ * @param {number} - The step value of the range. Defaults to 1.
+ * @returns {Iterator}
+ */
 function range(stop, start = null, step = 1) {
   let reversed = false;
   if (step < 0) {
@@ -444,6 +661,12 @@ function range(stop, start = null, step = 1) {
   };
 }
 
+/**
+ * Returns a string containing the printable representation of the given object.
+ * 
+ * @param {any} - The object to convert to a string.
+ * @returns {string}
+ */
 function repr(obj) {
   if (obj === null) {
     return "null";
@@ -462,6 +685,12 @@ function repr(obj) {
   }
 }
 
+/**
+ * Reverse the order of the given iterable.
+ * 
+ * @param {iterable} - The iterable to reverse.
+ * @returns {iterable}
+ */
 function reversed(iterable) {
   iterable = [...iterable];
   let result = [];
@@ -471,19 +700,49 @@ function reversed(iterable) {
   return result;
 }
 
+/**
+ * Return the rounded value of x to the given number of decimal places.
+ * 
+ * @param {number} - The number to round.
+ * @param {number} - The number of decimal places to round to.
+ * @returns {number}
+ */
 function round(num, ndigits = 0) {
   return Math.round(num * Math.pow(10, ndigits)) / Math.pow(10, ndigits);
 }
 
+/**
+ * Create a set from the given iterable.
+ * 
+ * @param {iterable} - The iterable to create a set from.
+ * @returns {Set}
+ */
 function set(array) {
   array = [...array];
   return new Set(array);
 }
 
+/**
+ * Set the value of an attribute of an object. If the attribute is not present,
+ * it will be added.
+ * 
+ * @param {object} - The object to set the attribute on.
+ * @param {string} - The name of the attribute to set.
+ * @param {any} - The value to set the attribute to.
+ */
 function setattr(obj, name, value) {
   obj[name] = value;
 }
 
+/**
+ * Return a slice of the given iterable.
+ * 
+ * @param {iterable} - The iterable to slice.
+ * @param {number} - The start index of the slice.
+ * @param {number} - The stop index of the slice.
+ * @param {number} - The step value of the slice.
+ * @returns {iterable}
+ */
 function slice(array, start, stop, step = 1) {
   array = [...array];
   let result = [];
@@ -493,6 +752,13 @@ function slice(array, start, stop, step = 1) {
   return result;
 }
 
+/**
+ * Return a sorted list of the given iterable.
+ * 
+ * @param {iterable} - The iterable to sort.
+ * @param {function} - The function to use to sort the iterable.
+ * @returns {iterable}
+ */
 function sorted(iterable, key = undefined, reverse = false) {
   iterable = [...iterable];
   let result = [];
@@ -510,6 +776,12 @@ function sorted(iterable, key = undefined, reverse = false) {
   return result;
 }
 
+/**
+ * Return the string representation of the given object.
+ * 
+ * @param {any} - The object to convert to a string.
+ * @returns {string}
+ */
 function str(x) {
   if (typeof x === "string") {
     return x;
@@ -520,19 +792,44 @@ function str(x) {
   }
 }
 
+/**
+ * Return the sum of the given iterable.
+ * 
+ * @param {iterable} - The iterable to sum.
+ * @returns {number}
+ */
 function sum(array) {
   array = [...array];
   return array.reduce((a, b) => a + b, 0);
 }
 
+/**
+ * Return a tuple of the given iterable.
+ * 
+ * @param {iterable} - The iterable to create a tuple from.
+ * @returns {Tuple}
+ */
 function tuple(iterable) {
   return new Tuple(iterable);
 }
 
+/**
+ * Return the type of the given object.
+ * 
+ * @param {any} - The object to get the type of.
+ * @returns {string}
+ */
 function type(obj) {
   return typeof obj;
 }
 
+/**
+ * Return a list of tuples, where the i-th tuple contains the i-th element from
+ * each of the argument sequences or iterables.
+ * 
+ * @param  {...any} - The iterables to zip.
+ * @returns {iterable}
+ */
 function zip(...arrays) {
   arrayCopy = list([]);
   for (arr of arrays) {
@@ -566,6 +863,11 @@ function zip(...arrays) {
   };
 }
 
+/**
+ * Throw an exception.
+ * 
+ * @param {Exception} - The exception to throw.
+ */
 function raise(exception) {
   throw exception;
 }
@@ -602,7 +904,6 @@ module.exports = {
   frozenset,
   getattr,
   hasattr,
-  help,
   hex,
   input,
   int,

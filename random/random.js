@@ -5,6 +5,7 @@ class Random {
   /**
    * Create a random number.
    * @param {number} seed 
+   * @returns {Random} a random number generator
    */
   constructor(seed = null) {
     this.seed = seed;

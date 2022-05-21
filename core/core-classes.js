@@ -173,11 +173,11 @@ class Dict extends Object {
     }
     if (iterable && iterable.length !== undefined) {
       for (let [key, value] of iterable) {
-        this.set(key, value);
+        this.setItem(key, value);
       }
     } else if (iterable) {
       for (const [key, value] of Object.entries(iterable)) {
-        this.set(key, value);
+        this.setItem(key, value);
       }
     }
   }
@@ -211,12 +211,12 @@ class Dict extends Object {
   }
 
   /**
-   * Sets the value of a key.
+   * Sets the key-value pair.
    *  
    * @param {string} - the key
    * @param {any} - the value
    */
-  set(key, value) {
+  setItem(key, value) {
     this[key] = value;
   }
 
@@ -240,7 +240,7 @@ class Dict extends Object {
   copy() {
     let newDict = new Dict();
     for (let [key, value] of Object.entries(this)) {
-      newDict.set(key, value);
+      newDict.setItem(key, value);
     }
     return newDict;
   }
@@ -290,7 +290,7 @@ class Dict extends Object {
    */
   update(other) {
     for (let [key, value] of Object.entries(other)) {
-      this.set(key, value);
+      this.setItem(key, value);
     }
   }
 
@@ -319,7 +319,7 @@ class Dict extends Object {
   static fromkeys(keys, value = null) {
     let newDict = new Dict();
     for (let key of keys) {
-      newDict.set(key, value);
+      newDict.setItem(key, value);
     }
     return newDict;
   }
