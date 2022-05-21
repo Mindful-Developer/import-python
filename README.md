@@ -1,5 +1,11 @@
 # import-python
-Python's built-in functions and classes ported to JavaScript + the random library. Most are pretty close to the same functionality as the python version of the function or class.
+Python's built-in functions and classes and modules ported to JavaScript. Most are pretty close to the same functionality as the python version of the function or class.
+This package is under active development.
+
+Completed modules:
+  - core (base python without importing)
+  - random
+  - itertools
 
 Full documentation can be located at:
 https://import-python.readthedocs.io/en/latest/index.html

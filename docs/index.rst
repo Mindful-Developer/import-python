@@ -2,8 +2,14 @@
 Welcome to import-python's documentation!
 =========================================
 
-**import-python** is a JavaScript library aimed at porting over all of Python's
-core libraries and built-ins to JavaScript. 
+**import-python** - Python's built-in functions and classes and modules ported to 
+JavaScript. Most are pretty close to the same functionality as the python version 
+of the function or class.
+
+Completed modules:
+  - core (base python without importing)
+  - random
+  - itertools
 
 .. note::
 
