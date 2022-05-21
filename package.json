@@ -6,7 +6,13 @@
   "scripts": {
     "test": "node ./tests/test.js"
   },
-  "keywords": [],
+  "keywords": [
+    "python",
+    "javascript",
+    "built-in",
+    "functions",
+    "classes"
+  ],
   "author": "Christopher James",
   "license": "GNU GPLv3"
 }
