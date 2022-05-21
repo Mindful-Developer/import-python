@@ -1,12 +1,18 @@
 {
   "name": "import-python",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Python built-in functions and classes in JavaScript with no dependencies",
   "main": "import-python.js",
   "scripts": {
     "test": "node ./tests/test.js"
   },
-  "keywords": [],
+  "keywords": [
+    "python",
+    "javascript",
+    "built-in",
+    "functions",
+    "classes"
+  ],
   "author": "Christopher James",
   "license": "GNU GPLv3"
 }
