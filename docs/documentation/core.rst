@@ -71,7 +71,21 @@ Functions
 
 .. autofunction:: float
 
-.. autofunction:: format
+.. function:: format(string, *args)
+
+  Return a formatted string. The string must have at least one replacement
+  sequence, otherwise a TypeError is raised.
+
+  The embedded sequences are substituted by the values in args. The
+  sequence has the form ``{}``.
+
+  The result is computed by replacing each occurrence of the embedded
+  sequence with the string representation of the corresponding value.
+
+  Example:
+
+  >>> format("{} {}", "a", "b")
+  'a b'
 
 .. autofunction:: frozenset
 

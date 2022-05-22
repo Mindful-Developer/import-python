@@ -26,6 +26,7 @@ Contents
    documentation/core
    documentation/random
    documentation/itertools
+   documentation/string
 
 
 Indices and tables
