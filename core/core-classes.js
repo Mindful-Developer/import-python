@@ -1,5 +1,3 @@
-const fs = require("fs");
-const util = require("util");
 const { isIterable } = require("../util/util");
 
 /** Class to represent a complex number system (real and imaginary) */
@@ -21,10 +19,6 @@ class Complex {
     } else {
       this.imaginary = imaginary;
     }
-  }
-
-  [util.inspect.custom]() {
-    return this.toString();
   }
 
   /**
@@ -194,10 +188,6 @@ class Dict extends Object {
         }
       },
     };
-  }
-
-  [util.inspect.custom]() {
-    return this.toString();
   }
 
   /**
@@ -382,10 +372,6 @@ class FrozenSet extends Set {
     Object.freeze(this);
   }
 
-  [util.inspect.custom]() {
-    return this.toString();
-  }
-
   /**
    * Returns a string representation of the frozen set.
    * 
@@ -428,10 +414,6 @@ class Tuple extends Array {
       throw new Error("Invalid iterable");
     }
     Object.freeze(this);
-  }
-
-  [util.inspect.custom]() {
-    return this.toString();
   }
 
   /**
@@ -512,10 +494,6 @@ class List extends Array {
     } else {
       throw new Error("Invalid iterable");
     }
-  }
-
-  [util.inspect.custom]() {
-    return this.toString();
   }
 
   /**
@@ -663,160 +641,6 @@ class List extends Array {
       }
     }
     return `[${output.slice(0, -2)}]`;
-  }
-}
-
-/** Class to represent an open file */
-class FileObject {
-  /**
-   * Creates a file object.
-   * 
-   * @param {string} - the file path
-   * @param {string} - the file mode (r, r+, w, w+, a, a+)
-   */
-  constructor(path, mode = "r") {
-    this.path = path;
-    this.mode = mode;
-    if (!["r", "r+", "w", "w+", "a", "a+"].includes(mode)) {
-      throw new Error(`Invalid mode: ${mode}`);
-    }
-    if (!["r", "a", "a+"].includes(mode)) {
-      fs.writeFileSync(this.path, "");
-    }
-    this.open = true;
-  }
-
-  /** Closes the file. */
-  close() {
-    this.open = false;
-    Object.freeze(this);
-  }
-
-  /**
-   * Reads the file.
-   * 
-   * @returns {string}
-   * @throws {Error} - if the file is not open in reading mode
-   * @throws {Error} - if the file does not exist
-   * @throws {Error} - if the file is closed
-   */
-  read() {
-    if (!this.open) {
-      throw new Error("File is closed");
-    }
-    if (["r", "r+", "a+", "w+"].includes(this.mode)) {
-      return fs.readFileSync(this.path, "utf8");
-    } else {
-      throw new Error("File not open for reading");
-    }
-  }
-
-  /**
-   * Reads one line from the file.
-   * 
-   * @param {number} - the line to read
-   * @returns {string}
-   * @throws {Error} - if the file is not open in reading mode
-   * @throws {Error} - if the file does not exist
-   * @throws {Error} - if the file is closed
-   */
-  readline(i = 0) {
-    if (!this.open) {
-      throw new Error("File is closed");
-    }
-    if (["r", "r+", "a+", "w+"].includes(this.mode)) {
-      let lines = this.read().split("\n");
-      return lines[i] + "\n";
-    } else {
-      throw new Error("File not open for reading");
-    }
-  }
-
-  /**
-   * Reads all lines from the file and returns them as a list.
-   * A newline character is appended to the end of each line.
-   * 
-   * @param {number} - the starting line
-   * @param {number} - the ending line
-   * @returns {List}
-   * @throws {Error} - if the file is not open in reading mode
-   * @throws {Error} - if the file does not exist
-   * @throws {Error} - if the file is closed
-   */
-  readlines(start = 0, stop = null) {
-    if (!this.open) {
-      throw new Error("File is closed");
-    }
-    if (["r", "r+", "a+", "w+"].includes(this.mode)) {
-      let lines = this.read().split("\n");
-      if (stop === null) {
-        stop = len(lines);
-      }
-      return new List(map((line) => line + "\n", lines.slice(start, stop)));
-    } else {
-      throw new Error("File not open for reading");
-    }
-  }
-
-  /**
-   * Truncates the file to the specified length.
-   * 
-   * @param {number} - the length
-   * @throws {Error} - if the file is not open in writing mode
-   * @throws {Error} - if the file is closed
-   */
-  truncate(size = null) {
-    if (!this.open) {
-      throw new Error("File is closed");
-    }
-    if (["w", "w+", "r+"].includes(this.mode)) {
-      if (size === null) {
-        size = 0;
-      }
-      fs.truncateSync(this.path, size);
-    } else {
-      throw new Error(
-        "File not open for trucating. Use mode 'w' or 'w+' or 'r+'"
-      );
-    }
-  }
-
-  /**
-   * Writes the specified string to the file.
-   * 
-   * @param {string} - the string to write
-   * @throws {Error} - if the file is not open in writing or appending mode
-   * @throws {Error} - if the file is closed
-   */
-  write(data) {
-    if (!this.open) {
-      throw new Error("File is closed");
-    }
-    if (["w", "w+", "a", "a+"].includes(this.mode)) {
-      fs.appendFileSync(this.path, data);
-    } else {
-      throw new Error("File not open for writing");
-    }
-  }
-
-  /**
-   * Writes the list of strings to the file.
-   * 
-   * @param {iterable} - the iterable of strings to write
-   * @throws {Error} - if the file is not open in writing or appending mode
-   * @throws {Error} - if the file is closed
-   */
-  writelines(iterable) {
-    if (!this.open) {
-      throw new Error("File is closed");
-    }
-    if (["w", "w+", "a", "a+"].includes(this.mode)) {
-      for (let line of iterable) {
-        fs.appendFileSync(this.path, line);
-      }
-    } else {
-      throw new Error("File not open for writing");
-    }
   }
 }
 
@@ -1816,6 +1640,5 @@ module.exports = {
   Dict,
   FrozenSet,
   Tuple,
-  List,
-  FileObject,
+  List
 };

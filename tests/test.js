@@ -1,4 +1,3 @@
-const fs = require("fs");
 const { py_import_star } = require("../import-python");
 const { listComp, assert, raise } = require("../util/util");
 
@@ -596,34 +595,6 @@ assert(max(items) === 5, "max() failed");
 assert(min(items) === 1, "min() failed");
 assert(oct(511) === "777", "oct() failed");
 
-// open() tests
-f = open("test.txt", "w+");
-assert(isinstance(f, FileObject), "open() construction failed");
-assert(f.read() === "", "open() blank file creation failed");
-f.write("Hello World!\n");
-assert(f.read() === "Hello World!\n", "open().write() failed");
-f.writelines(["There\n", "is\n", "a\n", "cat\n"]);
-assert(
-  f.read() === "Hello World!\nThere\nis\na\ncat\n",
-  "open().writelines() failed"
-);
-lines = f.readlines();
-assert(lines[0] === "Hello World!\n", "open().readlines() failed");
-assert(f.readline(1) === "There\n", "open().readline() failed");
-f.truncate(5);
-assert(f.read() === "Hello", "open().truncate() failed");
-f.close();
-assert(f.open === false, "open().close() failed");
-f.open = true;
-assert(f.open === false, "open().close() freeze failed");
-try {
-  f.read();
-  assert(false, "open().read() failed");
-} catch (e) {
-  assert(e.message === "File is closed", "open().read() failed");
-}
-fs.unlinkSync("test.txt");
-
 // more tests
 assert(ord("a") === 97, "ord() failed");
 assert(pow(2, 3) === 8, "pow() failed");
@@ -681,7 +652,7 @@ assert(
   "sorted() failed"
 );
 
-assert(str(items) === "[ 1, 2, 3, 4, 5 ]", "str() failed");
+assert(str(items) === "1,2,3,4,5", "str() failed");
 assert(str("Hello World!") === "Hello World!", "str() failed");
 assert(str(1.2345) === "1.2345", "str() failed");
 

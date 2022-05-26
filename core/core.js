@@ -1,6 +1,3 @@
-const util = require("util");
-const os = require("os");
-const child_process = require("child_process");
 const { isIterable } = require("../util/util");
 const {
   Complex,
@@ -347,31 +344,6 @@ function hex(x) {
 }
 
 /**
- * Synchronously prompt the user for input. The prompt is displayed on the standard output stream,
- * and the user’s input is returned as a string.
- * 
- * @param {string} - The prompt to display to the user.
- * @returns {string}
- */
-function input(message = "") {
-  process.stdout.write(message);
-  let cmd;
-  let args;
-  if (os.platform() == "win32") {
-    cmd = "cmd";
-    args = ["/V:ON", "/C", "set /p response= && echo !response!"];
-  } else {
-    cmd = "bash";
-    args = ["-c", 'read response; echo "$response"'];
-  }
-  let opts = {
-    stdio: ["inherit", "pipe", "inherit"],
-    shell: false,
-  };
-  return child_process.spawnSync(cmd, args, opts).stdout.toString().trim();
-}
-
-/**
  * Return the integer value of x. If base is given, the string x is first converted 
  * to a number in base base. If the string cannot be converted to an integer, a TypeError is raised.
  * 
@@ -536,17 +508,6 @@ function oct(x) {
 }
 
 /**
- * Open a file, returning a file object.
- * 
- * @param {string} - The path to the file to open.
- * @param {string} - The mode to open the file in. Defaults to "r". (r, r+, w, w+, a, a+)
- * @returns {FileObject}
- */
-function open(file, mode = "r") {
-  return new FileObject(file, mode);
-}
-
-/**
  * Return the Unicode code point for the given character.
  * 
  * @param {string} - The character to get the Unicode code point for.
@@ -568,37 +529,13 @@ function pow(num, exp) {
 }
 
 /**
- * Print the given object to the console.
+ * Print the given object to the console *no end or sep abilities in web version*.
  * 
  * @param {any} - The object to print.
- * @param {string} - The string to print after the object.
- * @param {string} - The string to print between every object.
  * @param  {...any} - Any additional objects to print.
  */
-function print(text, end = "\n", sep = " ", ...args) {
-  let result = "";
-  if (typeof text === "string") {
-    result = text;
-  } else if (typeof text === "number") {
-    result = text.toString();
-  } else if (typeof text === "object") {
-    result = text.toString();
-  } else if (typeof text === "boolean") {
-    result = text.toString();
-  }
-  for (let i = 0; i < len(args); i++) {
-    if (typeof args[i] === "string") {
-      result = result + sep + args[i];
-    } else if (typeof args[i] === "number") {
-      result = result + sep + args[i].toString();
-    } else if (typeof args[i] === "object") {
-      result = result + sep + args[i].toString();
-    } else if (typeof text === "boolean") {
-      result = result + sep + args[i].toString();
-    }
-  }
-  result += end;
-  process.stdout.write(result);
+function print(text, ...args) {
+  console.log(text, ...args);
 }
 
 // range
@@ -767,10 +704,8 @@ function sorted(iterable, key = undefined, reverse = false) {
 function str(x) {
   if (typeof x === "string") {
     return x;
-  } else if (typeof x === "number") {
-    return x.toString();
   } else {
-    return util.inspect(x);
+    return x.toString();
   }
 }
 
@@ -851,7 +786,6 @@ module.exports = {
   FrozenSet,
   Tuple,
   List,
-  FileObject,
   abs,
   all,
   any,
@@ -878,7 +812,6 @@ module.exports = {
   getattr,
   hasattr,
   hex,
-  input,
   int,
   isinstance,
   issubclass,

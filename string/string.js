@@ -1,5 +1,3 @@
-const { Buffer } = require("node:buffer");
-
 // String constants
 
 /** The concatenation of the ascii_lowercase and ascii_uppercase constants */

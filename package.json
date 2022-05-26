@@ -1,8 +1,8 @@
 {
-  "name": "import-python",
-  "version": "2.2.0",
-  "description": "Python built-in functions and classes in JavaScript with no dependencies",
-  "main": "import-python.js",
+  "name": "import-python-web",
+  "version": "1.0.0",
+  "description": "Python built-in functions, classes and (some) modules ported to JavaScript with no dependencies and web compatibility",
+  "main": "import-python-web.js",
   "scripts": {
     "test": "node ./tests/test.js"
   },
@@ -11,7 +11,8 @@
     "javascript",
     "built-in",
     "functions",
-    "classes"
+    "classes",
+    "web"
   ],
   "author": "Christopher James",
   "license": "GNU GPLv3"

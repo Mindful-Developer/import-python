@@ -22,9 +22,6 @@ Classes
 .. autoclass:: FrozenSet
   :members:
 
-.. autoclass:: FileObject
-  :members:
-
 .. class:: String
   
   Additional methods for strings.
@@ -244,8 +241,6 @@ Functions
 .. autofunction:: next
 
 .. autofunction:: oct
-
-.. autofunction:: open
 
 .. autofunction:: ord
 
