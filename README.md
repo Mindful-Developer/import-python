@@ -1,11 +1,15 @@
 # import-python
-Python's built-in functions and classes and modules ported to JavaScript. Most are pretty close to the same functionality as the python version of the function or class.
+Python's built-in functions, classes and modules ported to JavaScript. Most are pretty close to the same functionality as the python version of the function or class. 
+
+* not web friendly (working on it!) *
+
 This package is under active development.
 
 Completed modules:
   - core (base python without importing)
   - random
   - itertools
+  - string
 
 Full documentation can be located at:
 https://import-python.readthedocs.io/en/latest/index.html
@@ -40,6 +44,7 @@ print(random.randint(1, 5))
 
 
 # Core
+  - String methods (built into existing String class)
   - Complex,
   - Dict,
   - FileObject,
@@ -136,3 +141,14 @@ print(random.randint(1, 5))
   - takewhile,
   - tee,
   - zip_longest
+
+# String
+  - ascii_letters,
+  - ascii_lowercase,
+  - ascii_uppercase,
+  - digits,
+  - hexdigits,
+  - octdigits,
+  - punctuation,
+  - whitespace,
+  - printable  

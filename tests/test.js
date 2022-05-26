@@ -1,11 +1,11 @@
 const fs = require("fs");
-const { py_import_star, py_import } = require("../import-python");
-const { seed } = require("../random/random");
-const { listComp } = require("../util/util");
+const { py_import_star } = require("../import-python");
+const { listComp, assert, raise } = require("../util/util");
 
 py_import_star("core");
 py_import_star("random");
 py_import_star("itertools");
+py_import_star("string");
 
 // Complex test
 let my_complex = new Complex(1, 2);
@@ -211,6 +211,193 @@ assert(my_list.count(9) === 1, "List count failed");
 assert(my_list.count(0) === 0, "List count failed");
 assert(my_list.toString() === "[9, 8, 6, 5, 4, 3, 1]", "List toString failed");
 
+// String tests
+my_string = "hello";
+assert(my_string.capitalize() === "Hello", "String capitalize failed");
+assert(my_string.center(10) === "  hello   ", "String center failed");
+assert(my_string.count("l") === 2, "String count failed");
+assert(my_string.encode("utf-8") === "hello", "String encode failed");
+assert(my_string.endswith("o") === true, "String endswith failed");
+assert(my_string.endswith("x") === false, "String endswith failed");
+my_string = "\thello";
+assert(my_string.expandtabs(6) === "      hello", "String expandtabs failed");
+my_string = "hello";
+assert(my_string.find("l") === 2, "String find failed");
+assert(my_string.find("x") === -1, "String find failed");
+assert(my_string.find("l", 3) === 3, "String find failed");
+assert(my_string.find("l", 0, 2) === -1, "String find failed");
+assert(my_string.find("l", 0, 3) === 2, "String find failed");
+assert(my_string.index("l") === 2, "String index failed");
+assert(my_string.index("x") === -1, "String index failed");
+assert(my_string.index("l", 3) === 3, "String index failed");
+assert(my_string.index("l", 0, 2) === -1, "String index failed");
+my_string = "hello {}, {} and {}";
+assert(
+  my_string.format("world", "universe", "everything") ===
+    "hello world, universe and everything",
+  "String format failed"
+);
+my_string = "hello {0}, {1} and {2}";
+assert(
+  my_string.format("world", "universe", "everything") ===
+    "hello world, universe and everything",
+  "String format failed"
+);
+my_string = "hello {0}, {0} and {0}";
+assert(
+  my_string.format("world", "universe", "everything") ===
+    "hello world, world and world",
+  "String format failed"
+);
+my_string = "hello {name}, My name is {name2}. I am {age} months old.";
+assert(
+  my_string.format_map({
+    name: "user",
+    name2: "import-python",
+    age: "a few",
+  }) === "hello user, My name is import-python. I am a few months old.",
+  "String format failed"
+);
+my_string = "hello world 123";
+my_other_string = "helloworld123";
+alpha_string = "helloworld";
+digit_string = "123";
+spaces_string = "  \n\t\r\v\f";
+
+assert(my_string.isalnum() === false, "String isalnum failed");
+assert(my_other_string.isalnum() === true, "String isalnum failed");
+assert(alpha_string.isalnum() === true, "String isalnum failed");
+assert(digit_string.isalnum() === true, "String isalnum failed");
+assert(spaces_string.isalnum() === false, "String isalnum failed");
+
+assert(my_string.isalpha() === false, "String isalpha failed");
+assert(my_other_string.isalpha() === false, "String isalpha failed");
+assert(alpha_string.isalpha() === true, "String isalpha failed");
+assert(digit_string.isalpha() === false, "String isalpha failed");
+assert(spaces_string.isalpha() === false, "String isalpha failed");
+
+assert(my_string.isdigit() === false, "String isdigit failed");
+assert(my_other_string.isdigit() === false, "String isdigit failed");
+assert(alpha_string.isdigit() === false, "String isdigit failed");
+assert(digit_string.isdigit() === true, "String isdigit failed");
+assert(spaces_string.isdigit() === false, "String isdigit failed");
+
+assert(my_string.isidentifier() === false, "String isidentifier failed");
+assert(my_other_string.isidentifier() === true, "String isidentifier failed");
+assert(alpha_string.isidentifier() === true, "String isidentifier failed");
+assert(digit_string.isidentifier() === false, "String isidentifier failed");
+assert(spaces_string.isidentifier() === false, "String isidentifier failed");
+
+assert(my_string.islower() === false, "String islower failed");
+assert(my_other_string.islower() === false, "String islower failed");
+assert(alpha_string.islower() === true, "String islower failed");
+assert(digit_string.islower() === false, "String islower failed");
+assert(spaces_string.islower() === false, "String islower failed");
+assert("hello world".islower() === true, "String islower failed");
+
+assert(my_string.isnumeric() === false, "String isnumeric failed");
+assert(my_other_string.isnumeric() === false, "String isnumeric failed");
+assert(alpha_string.isnumeric() === false, "String isnumeric failed");
+assert(digit_string.isnumeric() === true, "String isnumeric failed");
+assert(spaces_string.isnumeric() === false, "String isnumeric failed");
+
+assert(my_string.isprintable() === true, "String isprintable failed");
+assert(my_other_string.isprintable() === true, "String isprintable failed");
+assert(alpha_string.isprintable() === true, "String isprintable failed");
+assert(digit_string.isprintable() === true, "String isprintable failed");
+assert(spaces_string.isprintable() === false, "String isprintable failed");
+
+assert(my_string.isspace() === false, "String isspace failed");
+assert(my_other_string.isspace() === false, "String isspace failed");
+assert(alpha_string.isspace() === false, "String isspace failed");
+assert(digit_string.isspace() === false, "String isspace failed");
+assert(spaces_string.isspace() === true, "String isspace failed");
+
+assert(my_string.istitle() === false, "String istitle failed");
+assert(my_other_string.istitle() === false, "String istitle failed");
+assert(alpha_string.istitle() === false, "String istitle failed");
+assert(digit_string.istitle() === false, "String istitle failed");
+assert(spaces_string.istitle() === false, "String istitle failed");
+assert("Hello World".istitle() === true, "String istitle failed");
+
+assert(my_string.isupper() === false, "String isupper failed");
+assert(my_other_string.isupper() === false, "String isupper failed");
+assert(alpha_string.isupper() === false, "String isupper failed");
+assert(digit_string.isupper() === false, "String isupper failed");
+assert(spaces_string.isupper() === false, "String isupper failed");
+assert("HELLO WORLD".isupper() === true, "String isupper failed");
+
+assert("-".join(my_string.split(" ")) === "hello-world-123", "String join failed");
+assert(my_string.ljust(20) === "hello world 123     ", "String ljust failed");
+assert("HELLO WORLD".lower() === "hello world", "String lower failed");
+assert("hello world".lstrip() === "hello world", "String lstrip failed");
+assert("hello world".lstrip("he") === "llo world", "String lstrip failed");
+
+const translation = String.maketrans("abc", "xyz")
+assert(
+  translation.toString() === "{97: 120, 98: 121, 99: 122}",
+  "String maketrans failed"
+);
+
+assert("hello world".partition("o").toString() === "(hell, o,  world)", "String partition failed");
+assert("hello world".replace("o", "a") === "hella warld", "String replace failed");
+assert("hello world".replace("o", "a", 1) === "hella world", "String replace failed");
+
+assert("hello world".rfind("o") === 7, "String rfind failed");
+assert("hello world".rfind("l") === 9, "String rindex failed");
+assert("hello world".rfind("h") === 0, "String rindex failed");
+
+assert("hello world".rindex("o") === 7, "String rindex failed");
+assert("hello world".rindex("l") === 9, "String rindex failed");
+assert("hello world".rindex("h") === 0, "String rindex failed");
+
+assert("hello world".rjust(20) === "         hello world", "String rjust failed");
+assert(my_string.rjust(20) === "     hello world 123", "String rjust failed");
+
+assert("hello world".rpartition("o").toString() === "(hello w, o, rld)", "String rpartition failed");
+
+assert(
+  "hello world".rsplit("o").toString() === "[rld,  w, hell]",
+  "String rsplit failed"
+);
+
+assert(
+  "hello world  ".rstrip(" ") === "hello world",
+  "String rstrip failed"
+);
+assert(
+  "hello world".rstrip("ld") === "hello wor",
+  "String rstrip failed"
+);
+assert("hello world 123".split().toString() === '[hello, world, 123]', "String split failed");
+assert(
+  `hello\nworld`.splitlines().toString() === "[hello, world]",
+  "String splitlines failed"
+)
+assert("hello world".startswith("h") === true, "String startswith failed");
+assert("hello world".startswith("hello") === true, "String startswith failed");
+assert("hello world".startswith("hello", 0) === true, "String startswith failed");
+assert("hello world".startswith("hello", 1) === false, "String startswith failed");
+
+assert(" hello world    ".strip() === "hello world", "String strip failed");
+assert(" hello world    ".strip(" ") === "hello world", "String strip failed");
+assert("hello world    ".strip("hello") === " world    ", "String strip failed");
+
+assert("hello world".swapcase() === "HELLO WORLD", "String swapcase failed");
+assert("hElLo WoRlD".swapcase() === "HeLlO wOrLd", "String swapcase failed");
+
+assert("hello world".title() === "Hello World", "String title failed");
+assert("hello World".title() === "Hello World", "String title failed");
+assert("hello, a, world".title() === "Hello, A, World", "String title failed");
+
+assert("abcdefg".translate(translation) === "xyzdefg", "String translate failed");
+assert("aaabbbccc".translate(translation) === "xxxyyyzzz", "String translate failed");
+
+assert("hello world".upper() === "HELLO WORLD", "String upper failed");
+assert("85954".zfill(10) === "0000085954", "String zfill failed");
+assert("85954".zfill(5) === "85954", "String zfill failed");
+assert("85954".zfill(2) === "85954", "String zfill failed");
+
 // Random tests
 vals = new Set();
 for (let i = 0; i < 10000; i++) {
@@ -218,7 +405,7 @@ for (let i = 0; i < 10000; i++) {
   vals.add(rand);
   assert(rand >= 0 && rand <= 1, "Random.random() failed range check");
 }
-assert(vals.size >= 9999, "Random.random() failed uniqueness check");
+assert(vals.size >= 9995, "Random.random() failed uniqueness check");
 
 vals = [];
 for (i = 0; i < 1000; i++) {
@@ -361,7 +548,7 @@ assert(
   "enumerate() failed"
 );
 assert(
-  exec("let x = 5; assert(x === 5, 'exec() failed')") === undefined,
+  exec("const { listComp, assert } = require('../util/util'); let x = 5; assert(x === 5, 'exec() failed')") === undefined,
   "exec() failed"
 );
 items = [1, 2, 3, 4, 5];
@@ -423,7 +610,6 @@ assert(
 lines = f.readlines();
 assert(lines[0] === "Hello World!\n", "open().readlines() failed");
 assert(f.readline(1) === "There\n", "open().readline() failed");
-assert(f.splitlines()[0] === "Hello World!", "open().splitlines() failed");
 f.truncate(5);
 assert(f.read() === "Hello", "open().truncate() failed");
 f.close();
@@ -638,6 +824,33 @@ assert(
   list(zip_longest("-", "ABCD", "xy")).toString() ===
     "[(A, x), (B, y), (C, -), (D, -)]",
   "zip_longest() failed"
+);
+
+// String module tests
+assert(
+  ascii_letters === "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "ascii_letters failed"
+);
+assert(
+  ascii_lowercase === "abcdefghijklmnopqrstuvwxyz",
+  "ascii_lowercase failed"
+);
+assert(
+  ascii_uppercase === "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "ascii_uppercase failed"
+);
+assert(digits === "0123456789", "digits failed");
+assert(hexdigits === "0123456789abcdefABCDEF", "hexdigits failed");
+assert(octdigits === "01234567", "octdigits failed");
+assert(
+  punctuation === "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
+  "punctuation failed"
+);
+assert(whitespace === " \t\n\r\v\f", "whitespace failed");
+assert(
+  printable ===
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\v\f",
+  "printable failed"
 );
 
 print("All tests passed");

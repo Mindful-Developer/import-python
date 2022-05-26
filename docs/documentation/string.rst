@@ -22,9 +22,3 @@ Constants
 .. autoattribute:: punctuation
 
 .. autoattribute:: whitespace
-
-Classes
--------
-
-.. autoclass:: Str
-  :members:
