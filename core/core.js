@@ -44,20 +44,6 @@ function any(array) {
 }
 
 /**
- * Assert that the given condition is true. If it is not, raise an error.
- * 
- * @param {boolean} - The condition to assert.
- * @param {string} - The error message to raise if the condition is false.
- * @param {boolean} - The expected condition result.
- * @throws {Error} - If the condition is false.
- */
-function assert(condition, message, expected = true) {
-  if (condition !== expected) {
-    throw new Error(message || "Assertion failed");
-  }
-}
-
-/**
  * return a string containing a printable representation of an object, but escape the non-ASCII characters in the string.
  * 
  * @param {Object} - the object
@@ -306,11 +292,7 @@ function float(x) {
  * @returns {string}
  */
 function format(string, ...args) {
-  let result = string;
-  for (let i = 0; i < len(args); i++) {
-    result = result.replace(`{}`, args[i]);
-  }
-  return result;
+  return string.format(...args);
 }
 
 /**
@@ -863,15 +845,6 @@ function zip(...arrays) {
   };
 }
 
-/**
- * Throw an exception.
- * 
- * @param {Exception} - The exception to throw.
- */
-function raise(exception) {
-  throw exception;
-}
-
 module.exports = {
   Complex,
   Dict,
@@ -882,7 +855,6 @@ module.exports = {
   abs,
   all,
   any,
-  assert,
   ascii,
   bin,
   bool,
@@ -898,6 +870,7 @@ module.exports = {
   divmod,
   enumerate,
   exec,
+  False: false,
   filter,
   float,
   format,
@@ -917,6 +890,7 @@ module.exports = {
   max,
   min,
   next,
+  None: null,
   oct,
   open,
   ord,
@@ -932,8 +906,8 @@ module.exports = {
   sorted,
   str,
   sum,
+  True: true,
   tuple,
   type,
   zip,
-  raise,
 };
