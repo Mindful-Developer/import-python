@@ -47,7 +47,6 @@ print(random.randint(1, 5))
   - String methods (built into existing String class)
   - Complex,
   - Dict,
-  - FileObject,
   - FrozenSet,
   - List,
   - Tuple,
@@ -90,7 +89,6 @@ print(random.randint(1, 5))
   - min,
   - next,
   - oct,
-  - open,
   - ord,
   - pow,
   - print,
