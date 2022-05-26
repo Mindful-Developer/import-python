@@ -1,5 +1,5 @@
 # import-python
-Python's built-in functions, classes and modules ported to JavaScript. Most are pretty close to the same functionality as the python version of the function or class. 
+Python's built-in functions, classes and (some) modules ported to JavaScript. Most are pretty close to the same functionality as the python version of the function or class. 
 
 * not web friendly (working on it!) *
 
