@@ -14,7 +14,7 @@ Completed modules:
 
 .. note::
 
-   **this module is not web friendly (working on a web-friendly version!)**
+   **this module is not web friendly (please up import-python-web for web projects)**
    This project is under active development.
 
 
